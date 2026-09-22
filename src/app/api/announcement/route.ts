@@ -29,7 +29,9 @@ export async function POST(req: Request) {
       timestamp: Date.now()
     };
     
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    const tempPath = filePath + '.tmp';
+    fs.writeFileSync(tempPath, JSON.stringify(data, null, 2));
+    fs.renameSync(tempPath, filePath);
     
     return NextResponse.json({ success: true, data });
   } catch (error) {

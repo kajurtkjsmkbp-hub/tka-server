@@ -17,9 +17,11 @@ function readDB() {
   return JSON.parse(data);
 }
 
-// Helper untuk menulis DB
+// Helper untuk menulis DB (Atomic Write)
 function writeDB(data: any) {
-  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+  const tempPath = dbPath + '.tmp';
+  fs.writeFileSync(tempPath, JSON.stringify(data, null, 2));
+  fs.renameSync(tempPath, dbPath);
 }
 
 // POST: Simpan skor baru

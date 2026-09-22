@@ -4,41 +4,37 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = "file:../data/lms.db"
 }
 
 model User {
-  id        String     @id @default(cuid())
-  name      String
-  email     String     @unique
+  id        String   @id @default(cuid())
+  username  String   @unique
   password  String
-  role      String     // "STUDENT" or "TEACHER"
-  progress  Progress[]
-  createdAt DateTime   @default(now())
+  fullName  String
+  role      String   // 'guru' or 'siswa'
+  kelas     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  
+  scores    Score[]
 }
 
-model Course {
-  id          String     @id @default(cuid())
-  title       String
-  semester    Int        // 1 or 2
-  content     String
-  questions   Question[]
+model Score {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  username  String
+  materiId  String
+  score     Int
+  timestamp DateTime @default(now())
+
+  @@unique([username, materiId])
 }
 
-model Question {
-  id          String   @id @default(cuid())
-  courseId    String
-  course      Course   @relation(fields: [courseId], references: [id])
-  type        String   // "MULTIPLE_CHOICE" or "CODING"
-  content     String
-  answerKey   String
-}
-
-model Progress {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  courseId    String
-  score       Int      @default(0)
-  completed   Boolean  @default(false)
+model Announcement {
+  id        Int      @id @default(1)
+  message   String
+  active    Boolean  @default(false)
+  timestamp DateTime @default(now())
 }

@@ -12,7 +12,9 @@ function getDb() {
 }
 
 function saveDb(data: any) {
-  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+  const tempPath = dbPath + '.tmp';
+  fs.writeFileSync(tempPath, JSON.stringify(data, null, 2));
+  fs.renameSync(tempPath, dbPath);
 }
 
 export async function POST(request: Request) {
