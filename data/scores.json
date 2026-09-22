@@ -1,0 +1,442 @@
+[
+  {
+    "username": "ipung",
+    "fullName": "Ipung",
+    "kelas": "X TE 1",
+    "materiId": "s1-p1",
+    "score": 90,
+    "timestamp": "2026-09-21T14:15:02.193Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p2",
+    "score": 30,
+    "timestamp": "2026-09-21T14:32:37.643Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p3",
+    "score": 4,
+    "timestamp": "2026-09-21T14:33:12.430Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p4",
+    "score": 0,
+    "timestamp": "2026-09-21T14:33:34.733Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p5",
+    "score": 2,
+    "timestamp": "2026-09-21T14:34:14.149Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p6",
+    "score": 2,
+    "timestamp": "2026-09-21T14:34:53.401Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p7",
+    "score": 0,
+    "timestamp": "2026-09-21T14:42:50.810Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p8",
+    "score": 0,
+    "timestamp": "2026-09-21T14:43:05.695Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p9",
+    "score": 0,
+    "timestamp": "2026-09-21T14:43:23.135Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p10",
+    "score": 0,
+    "timestamp": "2026-09-21T14:45:46.132Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p11",
+    "score": 0,
+    "timestamp": "2026-09-21T14:45:58.516Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p12",
+    "score": 0,
+    "timestamp": "2026-09-21T14:46:12.082Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p1",
+    "score": 2,
+    "timestamp": "2026-09-21T15:06:57.768Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p2",
+    "score": 0,
+    "timestamp": "2026-09-21T15:07:13.618Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p3",
+    "score": 0,
+    "timestamp": "2026-09-21T15:31:30.952Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p4",
+    "score": 2,
+    "timestamp": "2026-09-21T15:32:02.100Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p1-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-21T15:43:50.590Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p1-lab-chal2",
+    "score": 15,
+    "timestamp": "2026-09-21T15:44:16.534Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p1-lab-chal3",
+    "score": 15,
+    "timestamp": "2026-09-21T15:44:28.176Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p1-lab-chal4",
+    "score": 15,
+    "timestamp": "2026-09-21T15:44:40.912Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p1-lab-chal5",
+    "score": 15,
+    "timestamp": "2026-09-21T15:44:48.033Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p1-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-22T02:30:06.751Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p1-lab-chal2",
+    "score": 10,
+    "timestamp": "2026-09-22T02:30:15.412Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p1-lab-chal3",
+    "score": 10,
+    "timestamp": "2026-09-22T02:30:26.259Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p1-lab-chal4",
+    "score": 10,
+    "timestamp": "2026-09-22T02:30:49.473Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p1-lab-chal5",
+    "score": 10,
+    "timestamp": "2026-09-22T02:30:56.018Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p2-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-22T02:39:17.360Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p2-lab-chal2",
+    "score": 10,
+    "timestamp": "2026-09-22T02:39:24.392Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p2-lab-chal3",
+    "score": 10,
+    "timestamp": "2026-09-22T02:39:31.956Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p2-lab-chal4",
+    "score": 10,
+    "timestamp": "2026-09-22T02:39:39.570Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p2-lab-chal5",
+    "score": 10,
+    "timestamp": "2026-09-22T02:39:46.068Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p5",
+    "score": 0,
+    "timestamp": "2026-09-22T03:33:25.098Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p6-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-22T03:37:48.637Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p6-lab-chal2",
+    "score": 15,
+    "timestamp": "2026-09-22T03:38:02.923Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p3-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-22T03:41:46.214Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p3-lab-chal2",
+    "score": 10,
+    "timestamp": "2026-09-22T03:41:54.469Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p6",
+    "score": 2,
+    "timestamp": "2026-09-22T03:42:26.364Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p7",
+    "score": 2,
+    "timestamp": "2026-09-22T03:52:03.568Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p7-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-22T03:52:17.060Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p8",
+    "score": 0,
+    "timestamp": "2026-09-22T04:22:39.623Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p9",
+    "score": 2,
+    "timestamp": "2026-09-22T05:00:51.460Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p10",
+    "score": 0,
+    "timestamp": "2026-09-22T05:01:21.427Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p10-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-22T05:01:39.973Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p11",
+    "score": 0,
+    "timestamp": "2026-09-22T05:24:04.031Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p11-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-22T05:24:18.822Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p12",
+    "score": 4,
+    "timestamp": "2026-09-22T05:24:43.461Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s2-p12-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-22T05:25:05.131Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p3-lab-chal3",
+    "score": 10,
+    "timestamp": "2026-09-22T06:02:40.443Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p3-lab-chal4",
+    "score": 10,
+    "timestamp": "2026-09-22T06:02:46.010Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p3-lab-chal5",
+    "score": 10,
+    "timestamp": "2026-09-22T06:02:52.120Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p4-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-22T07:10:50.917Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p4-lab-chal2",
+    "score": 10,
+    "timestamp": "2026-09-22T07:13:24.971Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p4-lab-chal3",
+    "score": 10,
+    "timestamp": "2026-09-22T09:24:54.321Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p4-lab-chal4",
+    "score": 10,
+    "timestamp": "2026-09-22T09:31:58.335Z"
+  },
+  {
+    "username": "ipung",
+    "fullName": "Adiningtyas Yuli Purwato",
+    "kelas": "X TE 1",
+    "materiId": "s1-p4-lab-chal5",
+    "score": 10,
+    "timestamp": "2026-09-22T09:41:02.926Z"
+  }
+]

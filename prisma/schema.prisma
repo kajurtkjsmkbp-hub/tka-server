@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String     @id @default(cuid())
+  name      String
+  email     String     @unique
+  password  String
+  role      String     // "STUDENT" or "TEACHER"
+  progress  Progress[]
+  createdAt DateTime   @default(now())
+}
+
+model Course {
+  id          String     @id @default(cuid())
+  title       String
+  semester    Int        // 1 or 2
+  content     String
+  questions   Question[]
+}
+
+model Question {
+  id          String   @id @default(cuid())
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  type        String   // "MULTIPLE_CHOICE" or "CODING"
+  content     String
+  answerKey   String
+}
+
+model Progress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  courseId    String
+  score       Int      @default(0)
+  completed   Boolean  @default(false)
+}

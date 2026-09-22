@@ -1,69 +1,229 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function Home() {
+export default function AuthPage() {
+  const [isLogin, setIsLogin] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    localStorage.removeItem("currentUser");
+  }, []);
+
+
+  // Login form states
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
+  // Register form states (Khusus Siswa)
+  const [regFullName, setRegFullName] = useState('');
+  const [regUsername, setRegUsername] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [regClass, setRegClass] = useState('');
+  const [regMajor, setRegMajor] = useState('');
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: loginUsername, password: loginPassword })
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        localStorage.setItem('currentUser', JSON.stringify(data.user));
+        if (data.role === 'guru') {
+          router.push('/dashboard/guru');
+        } else {
+          router.push('/dashboard/siswa');
+        }
+      } else {
+        alert(data.error);
+      }
+    } catch (error) {
+      alert("Gagal terhubung ke server");
+    }
+  };
+
+  const handleRegister = async (e: any) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          fullName: regFullName, 
+          username: regUsername, 
+          password: regPassword, 
+          kelas: regClass, 
+          jurusan: regMajor,
+          role: 'siswa'
+        })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert('Pendaftaran berhasil! Silakan masuk dengan akun Anda.');
+        setIsLogin(true);
+      } else {
+        alert(data.error);
+      }
+    } catch (error) {
+      alert("Pendaftaran gagal");
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center font-sans">
+      <div className="text-center mb-10">
+        <h1 className="text-4xl font-extrabold text-blue-900 mb-2">LMS KKA</h1>
+        <p className="text-gray-600">Koding & Kecerdasan Artifisial - Kurikulum Merdeka</p>
+      </div>
+
+      <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 w-full max-w-md">
+        
+        {isLogin ? (
+          <>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Masuk Akun</h2>
+              <p className="text-sm text-gray-500 mt-1">Gunakan akun Anda untuk masuk ke platform.</p>
+            </div>
+
+            <form onSubmit={handleLogin} className="flex flex-col gap-5">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Username / Login</label>
+                <input 
+                  type="text" 
+                  value={loginUsername}
+                  onChange={(e) => setLoginUsername(e.target.value)}
+                  placeholder="Contoh: budi123 atau guru_andi"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                  required 
+                />
+                <p className="text-xs text-gray-400 mt-2">*Gunakan kata "guru" pada username untuk masuk sebagai guru.</p>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Kata Sandi</label>
+                <input 
+                  type="password" 
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="Masukkan kata sandi"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                  required 
+                />
+              </div>
+
+              <button type="submit" className="w-full mt-2 bg-blue-600 text-white font-bold py-3 rounded-xl shadow-md hover:bg-blue-700 hover:shadow-lg transition-all">
+                Masuk ke LMS
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-gray-600">
+              Belum punya akun?{' '}
+              <button 
+                onClick={() => setIsLogin(false)}
+                className="text-blue-600 font-semibold hover:underline"
+                type="button"
+              >
+                Silakan daftar
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Daftar Akun Siswa</h2>
+              <p className="text-sm text-gray-500 mt-1">Isi formulir berikut untuk membuat akun siswa baru.</p>
+            </div>
+
+            <form onSubmit={handleRegister} className="flex flex-col gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Nama Panjang</label>
+                <input 
+                  type="text" 
+                  value={regFullName}
+                  onChange={(e) => setRegFullName(e.target.value)}
+                  placeholder="Nama Lengkap Anda"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-900 focus:border-blue-500 outline-none"
+                  required 
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Username / Login</label>
+                <input 
+                  type="text" 
+                  value={regUsername}
+                  onChange={(e) => setRegUsername(e.target.value)}
+                  placeholder="Buat username unik"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-900 focus:border-blue-500 outline-none"
+                  required 
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Kelas</label>
+                  <input 
+                    type="text"
+                    value={regClass} 
+                    onChange={(e) => setRegClass(e.target.value)}
+                    placeholder="Contoh: X TE 3"
+                    className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-900 focus:border-blue-500 outline-none"
+                    required
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Jurusan</label>
+                  <input 
+                    type="text"
+                    value={regMajor} 
+                    onChange={(e) => setRegMajor(e.target.value)}
+                    placeholder="Contoh: Teknik Elektronika"
+                    className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-900 focus:border-blue-500 outline-none"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Kata Sandi</label>
+                <input 
+                  type="password" 
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                  placeholder="Buat kata sandi"
+                  className="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-900 focus:border-blue-500 outline-none"
+                  required 
+                />
+              </div>
+
+              <button type="submit" className="w-full mt-2 bg-green-600 text-white font-bold py-3 rounded-xl shadow-md hover:bg-green-700 hover:shadow-lg transition-all">
+                Daftar Akun
+              </button>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-gray-600">
+              Sudah punya akun?{' '}
+              <button 
+                onClick={() => setIsLogin(true)}
+                className="text-blue-600 font-semibold hover:underline"
+                type="button"
+              >
+                Masuk di sini
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+      
+      <p className="text-sm text-gray-400 mt-8 text-center max-w-sm">
+        Platform pembelajaran masa depan SMK Kelas X Kurikulum Nasional.
+      </p>
     </div>
   );
 }
