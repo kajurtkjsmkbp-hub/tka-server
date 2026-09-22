@@ -103,6 +103,22 @@ Silakan buka *browser* (Chrome/Firefox) di laptop yang terhubung ke jaringan yan
 
 ---
 
+## 🔐 Akun Login Default (Sample)
+
+Karena aplikasi berjalan dari basis data awal bawaan kode ini (`db.json`), berikut adalah beberapa akun *sample* yang bisa Anda gunakan langsung untuk mencoba *login* setelah aplikasi berhasil berjalan di Proxmox:
+
+### 👨‍🏫 Akun Guru
+- **Username:** `guru_andi`
+- **Password:** `password`
+
+### 👨‍🎓 Akun Siswa (Sample)
+- **Username:** `budi123`
+- **Password:** `password`
+
+*(Anda juga selalu bisa mendaftarkan akun siswa atau guru baru secara langsung melalui halaman "Daftar" di layar login awal aplikasi).*
+
+---
+
 ### 💡 Pemeliharaan (Maintenance / Update)
 
 Jika di kemudian hari ada pembaruan kode di GitHub, cara untuk memperbaruinya di server Proxmox sangat mudah:
