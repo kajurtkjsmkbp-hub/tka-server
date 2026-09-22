@@ -44,3 +44,7 @@ Dokumen ini berfungsi sebagai memori permanen proyek untuk AI dan Pengembang. Be
 ## 🛠️ Catatan Khusus
 - Server Proxmox LXC harus disetel **"Start at boot: Yes"** pada menu Options agar web otomatis menyala setelah listrik mati.
 - File `db.ts` dan migrasi Prisma telah dihapus karena proyek berkomitmen menggunakan JSON Atomic Write demi kelancaran dan kemudahan portabilitas.
+
+## ??? Keamanan Database (Git Ignore)
+- File JSON di dalam folder `data/` (seperti `db.json`, `scores.json`, `announcement.json`) **telah dikeluarkan dari pelacakan Git (untracked) dan dimasukkan ke `.gitignore`**. 
+- Tujuannya agar saat melakukan `git reset --hard` di server Proxmox, file database *live* tidak akan tertimpa/terhapus oleh database dari repo lokal.
