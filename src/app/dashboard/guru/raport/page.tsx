@@ -56,6 +56,8 @@ function getStudentsData() {
       name: student.fullName,
       kelas: student.kelas,
       modulesTaken: modulesCompleted,
+      avgS1,
+      avgS2,
       average: overallAvg,
       isActive: student.isActive !== false
     };
@@ -86,32 +88,36 @@ export default async function GuruRaport() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-widest border-b border-slate-100">
-                <th className="px-8 py-5 font-bold">Nama Siswa</th>
-                <th className="px-8 py-5 font-bold">Username</th>
-                <th className="px-8 py-5 font-bold">Kelas</th>
-                <th className="px-8 py-5 font-bold text-center">Modul Diselesaikan</th>
-                <th className="px-8 py-5 font-bold text-center">Rata-rata Keseluruhan</th>
-                <th className="px-8 py-5 font-bold text-center">Status Keaktifan</th>
+                <th className="px-6 py-5 font-bold">Nama Siswa</th>
+                <th className="px-6 py-5 font-bold">Username</th>
+                <th className="px-6 py-5 font-bold">Kelas</th>
+                <th className="px-6 py-5 font-bold text-center">Modul</th>
+                <th className="px-6 py-5 font-bold text-center">Raport SMT 1</th>
+                <th className="px-6 py-5 font-bold text-center">Raport SMT 2</th>
+                <th className="px-6 py-5 font-bold text-center">Nilai Akhir</th>
+                <th className="px-6 py-5 font-bold text-center">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {students.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-slate-500">Belum ada siswa yang terdaftar di database.</td>
+                  <td colSpan={8} className="p-8 text-center text-slate-500">Belum ada siswa yang terdaftar di database.</td>
                 </tr>
               ) : (
                 students.map((student) => (
                   <tr key={student.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="px-8 py-5 font-bold text-slate-800">{student.name}</td>
-                    <td className="px-8 py-5 text-slate-500 font-mono text-sm">@{student.username}</td>
-                    <td className="px-8 py-5 font-semibold text-slate-600">{student.kelas}</td>
-                    <td className="px-8 py-5 text-center">
+                    <td className="px-6 py-5 font-bold text-slate-800">{student.name}</td>
+                    <td className="px-6 py-5 text-slate-500 font-mono text-sm">@{student.username}</td>
+                    <td className="px-6 py-5 font-semibold text-slate-600">{student.kelas}</td>
+                    <td className="px-6 py-5 text-center">
                       <span className="px-3 py-1 bg-indigo-50 text-indigo-700 font-bold rounded-full text-sm">
-                        {student.modulesTaken} / 24 Modul
+                        {student.modulesTaken} / 24
                       </span>
                     </td>
-                    <td className="px-8 py-5 text-center font-black text-lg text-slate-700">{student.average > 0 ? student.average : '-'}</td>
-                    <td className="px-8 py-5 text-center">
+                    <td className="px-6 py-5 text-center font-bold text-slate-700">{student.avgS1 > 0 ? student.avgS1 : '-'}</td>
+                    <td className="px-6 py-5 text-center font-bold text-slate-700">{student.avgS2 > 0 ? student.avgS2 : '-'}</td>
+                    <td className="px-6 py-5 text-center font-black text-lg text-blue-700 bg-blue-50/50">{student.average > 0 ? student.average : '-'}</td>
+                    <td className="px-6 py-5 text-center">
                       {student.isActive ? (
                         <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">AKTIF</span>
                       ) : (
