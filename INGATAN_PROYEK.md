@@ -38,6 +38,8 @@ Dokumen ini berfungsi sebagai memori permanen proyek untuk AI dan Pengembang. Be
    - Fitur baru di Dasbor Guru (`TeacherManager.tsx`).
    - Memungkinkan penambahan guru baru, edit nama, mengaktifkan/menonaktifkan (suspend) akses login guru, dan hapus data guru.
 6. **Panduan Proxmox:** Tersedia file `PANDUAN_INSTALASI_PROXMOX.md` sebagai panduan mandiri untuk instalasi server dari nol.
+7. **Rekap Nilai Siswa SMT 1 & SMT 2:** Penambahan kolom khusus "Raport SMT 1", "Raport SMT 2", dan "Nilai Akhir" pada tabel Rekap Nilai dasbor Guru.
+8. **Sinkronisasi Algoritma Kalkulasi Nilai:** Sinkronisasi rumus perhitungan nilai pada tabel Guru agar selaras 100% dengan Raport Siswa (rata-rata 50% Latihan + 50% Virtual Lab). Sebelumnya terdapat bug di mana Guru hanya melihat rata-rata Latihan saja.
 
 ## 🛠️ Catatan Khusus
 - Server Proxmox LXC harus disetel **"Start at boot: Yes"** pada menu Options agar web otomatis menyala setelah listrik mati.
