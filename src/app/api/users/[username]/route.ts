@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-export async function PUT(request: Request, { params }: { params: { username: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ username: string }> }) {
   try {
     const { username } = await params;
     const body = await request.json();
@@ -35,7 +35,7 @@ export async function PUT(request: Request, { params }: { params: { username: st
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { username: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ username: string }> }) {
   try {
     const { username } = await params;
     const dbPath = path.join(process.cwd(), 'data', 'db.json');

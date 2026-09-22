@@ -170,8 +170,8 @@ export default function SiswaDashboard() {
                 const labChallenges = userScores.filter(s => s.materiId.startsWith(modul.id + "-lab-chal"));
                 const labDef = (labData as any)[modul.id];
                 const totalChallenges = labDef && labDef.challenges ? labDef.challenges.length : 0;
-                const labTotal = labChallenges.reduce((acc, curr) => acc + curr.score, 0);
-                const maxLabScore = labDef && labDef.challenges ? labDef.challenges.reduce((sum, chal) => sum + (chal.poin || 0), 0) : 0;
+                const labTotal = labChallenges.reduce((acc: any, curr: any) => acc + curr.score, 0);
+                const maxLabScore = labDef && labDef.challenges ? labDef.challenges.reduce((sum: any, chal: any) => sum + (chal.poin || 0), 0) : 0;
                 const labScore = labTotal;
                 
                 return (
