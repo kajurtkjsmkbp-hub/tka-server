@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useEffect } from 'react';
+import { use, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { labData } from '@/data/labData';
 
@@ -34,7 +34,7 @@ export default function VirtualLab({ params }: { params: Promise<{ id: string }>
   
   const [showAnswer, setShowAnswer] = useState(false);
   const [penaltyApplied, setPenaltyApplied] = useState(false);
-  
+  const penaltyRef = useRef(false);
   useEffect(() => {
     const userStr = localStorage.getItem('currentUser');
     if (userStr) {
@@ -67,12 +67,14 @@ export default function VirtualLab({ params }: { params: Promise<{ id: string }>
     setIsSuccess(false);
     setShowAnswer(false);
     setPenaltyApplied(false);
+    penaltyRef.current = false;
   }, [currentChalIndex]);
 
   const handleShowAnswer = () => {
     if (confirm("Apakah Anda yakin ingin melihat kunci jawaban? Poin Anda akan dikurangi " + challenge.penalty + " poin untuk tantangan ini.")) {
       setShowAnswer(true);
       setPenaltyApplied(true);
+      penaltyRef.current = true;
       setCode(challenge.answerCode);
     }
   };
@@ -99,7 +101,7 @@ export default function VirtualLab({ params }: { params: Promise<{ id: string }>
         setIsSuccess(true);
         
         let finalPoin = challenge.poin;
-        if (penaltyApplied) {
+        if (penaltyRef.current) {
           finalPoin = Math.max(0, finalPoin - challenge.penalty);
         }
         
