@@ -321,6 +321,16 @@ export default function SiswaDashboard() {
         
       </div>
       
+      {/* Footer */}
+      <footer className="mt-16 pb-8 text-center relative z-10">
+        <p className="text-sm font-bold text-slate-400 mb-1">
+          LMS KKA (Koding & Kecerdasan Artifisial)
+        </p>
+        <p className="text-xs font-semibold text-slate-500">
+          Design by Adiningtyas Yuli Purwanto, S.Kom
+        </p>
+      </footer>
+      
     </div>
   );
 }

@@ -221,9 +221,17 @@ export default function AuthPage() {
         )}
       </div>
       
-      <p className="text-sm text-gray-400 mt-8 text-center max-w-sm">
-        Platform pembelajaran masa depan SMK Kelas X Kurikulum Nasional.
-      </p>
+      <div className="mt-12 mb-8 text-center">
+        <p className="text-sm font-bold text-gray-500 mb-1">
+          LMS KKA (Koding & Kecerdasan Artifisial)
+        </p>
+        <p className="text-xs text-gray-400">
+          Platform pembelajaran masa depan SMK Kelas X Kurikulum Nasional.
+        </p>
+        <p className="text-xs font-semibold text-gray-500 mt-2">
+          Design by Adiningtyas Yuli Purwanto, S.Kom
+        </p>
+      </div>
     </div>
   );
 }
