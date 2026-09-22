@@ -1,42 +1,44 @@
-# INGATAN PROYEK - LMS KKA (Koding dan Kecerdasan Artifisial)
+# 🧠 Ingatan Proyek: LMS KKA (Koding & Kecerdasan Artifisial)
 
-## 1. Ikhtisar Proyek
-- **Deskripsi:** Sistem Manajemen Pembelajaran (LMS) modern untuk mata pelajaran "Koding dan Kecerdasan Artifisial" (KKA) untuk siswa Sekolah Menengah Kejuruan (SMK).
-- **Tech Stack:** Next.js 16.3.5 (App Router, Turbopack), React, Tailwind CSS, TypeScript.
-- **Autentikasi:** Menggunakan `localStorage` (Sistem satu login: peran Guru dan Siswa dibedakan otomatis melalui parameter `username`).
+Dokumen ini berfungsi sebagai memori permanen proyek untuk AI dan Pengembang. Berisi informasi teknis, arsitektur, dan riwayat fitur yang telah diimplementasikan agar konteks pengembangan tidak hilang.
 
-## 2. Fitur Utama
-1. **Dasbor Multi-Peran:**
-   - **Guru:** Dapat memantau progres siswa, rata-rata kelas, dan melihat nilai siswa secara real-time (`/dashboard/guru/page.tsx`).
-   - **Siswa:** Peta jalan pembelajaran interaktif (roadmap) yang menampilkan modul per semester, terbagi ke dalam Pertemuan (P1-P12).
-2. **Sistem Gamifikasi & Modul Terkunci:**
-   - Pertemuan akan terbuka secara sekuensial (modul selanjutnya terkunci sampai modul sebelumnya diselesaikan dan mendapatkan EXP).
-   - Pengumpulan Poin (EXP) didapat melalui Latihan Soal dan Virtual Lab.
-3. **Materi & Latihan Soal:**
-   - Tersedia materi terstruktur dan Latihan Soal (Pilihan ganda dan interaktif).
-   - Semester 1 telah selesai 100% dengan total 50+ latihan soal.
-4. **Virtual Lab (Simulasi Python):**
-   - Area khusus (`/dashboard/siswa/lab/[id]/page.tsx`) tempat siswa menulis dan menjalankan kode Python secara simulasi (frontend).
-   - Menggunakan sistem tantangan (*challenges*) yang divalidasi dengan pencocokan _string/regex_.
-   - **Fitur Kunci Jawaban:** Siswa dapat melihat bocoran jawaban dengan penalti pengurangan EXP.
+## 📌 Informasi Dasar
+- **Nama Proyek:** LMS KKA (Koding & Kecerdasan Artifisial)
+- **Desainer/Kreator Asli:** Adiningtyas Yuli Purwanto, S.Kom
+- **Tech Stack:** Next.js 16 (App Router, Turbopack), React, TypeScript, Tailwind CSS.
+- **Server Deployment:** Proxmox LXC (Ubuntu/Debian) menggunakan **PM2** untuk manajemen proses 24/7.
 
-## 3. Status Saat Ini
-- **Semester 1:** Telah terisi penuh (Pertemuan 1 sampai 12).
-- **Semester 2:**
-  - Pertemuan 1 - 4 (Materi sudah diisi, bertema Pengantar AI, Machine Learning, dan Proyek AI).
-  - **Virtual Lab S2-P1 & S2-P2:** Masing-masing sudah dilengkapi 5 soal berbobot (Sejarah AI, Konsep IF, Rule-Based, List, Dictionary, Kalkulasi Fitur ML).
-- **Backend/API:** `src/app/api/scores/route.ts` berjalan baik untuk menyimpan log poin Siswa.
+## 🗄️ Arsitektur Database (Sangat Penting)
+- **Sistem Database:** Flat JSON (`data/db.json` dan `data/scores.json`).
+- **Mekanisme Keamanan Tulis (Write Safety):** 
+  Untuk mencegah file JSON korup saat banyak siswa ujian bersamaan atau saat server mati mendadak (mati listrik), sistem menggunakan mekanisme **Atomic Renames** pada Node.js. 
+  Data pertama-tama ditulis ke file *sementara* (`.tmp`), kemudian ditimpa ke file utama menggunakan `fs.renameSync()`. Mekanisme ini menjamin integritas data (tidak perlu pindah ke SQLite/Prisma).
 
-## 4. Pelajaran Teknis & Aturan Koding yang Harus Diingat
-1. **Aturan Next.js / Turbopack Strictness:**
-   - Saat menyisipkan kode, sangat rawan _syntax error_ khususnya terkait karakter kutip (backticks), apostrof, tanda kutip (quotes), dan JSX String Interpolation (seperti `${variable}`).
-   - *Solusi/Aturan:* Gunakan `replace_file_content` secara akurat atau modifikasi variabel dengan penggabungan *string literal* (misal: `"string " + variabel` alih-alih templat `` `string ${variabel}` ``) jika menulis langsung via `CodeContent`.
-2. **Kecocokan File UI:**
-   - Menambahkan menu/tombol harus dicek sinkronisasi *props* komponennya agar build tidak *crash* (contoh: prop `hasLab` pada mapping array materi Dasbor Siswa).
-3. **Database Skor/Lab:**
-   - API skor mengenali ID yang berakhiran `-lab` atau `-lab-chal[id]` agar Dasbor bisa menjumlahkan seluruh EXP menjadi satu skor total yang menaikkan level siswa.
+## 🚀 Deployment & Pembaruan
+- Proyek ini terhubung dengan GitHub (`kajurtkjsmkbp-hub/tka-server`).
+- **Otomatisasi Push:** Akses Git sudah dikonfigurasi menggunakan GitHub Personal Access Token (PAT) sehingga AI atau sistem dapat melakukan `git push` tanpa terhalang *prompt* otentikasi.
+- **Prosedur Pembaruan Standar di Proxmox (Wajib):**
+  Jika ada pembaruan dari GitHub, gunakan 4 baris perintah ini di console Proxmox:
+  ```bash
+  git fetch --all
+  git reset --hard origin/main
+  npm run build
+  pm2 restart lms-kka
+  ```
 
-## 5. Pekerjaan Selanjutnya (Next Steps)
-- Melanjutkan penyusunan materi, Latihan Soal, dan *Virtual Lab* untuk sisa pertemuan Semester 2 (Pertemuan 3 hingga 12).
-- Pembuatan projek AI akhir (Pertemuan 11 & 12).
-- Refinasi UI/UX bilamana ada permintaan lebih lanjut dari pengguna.
+## ✨ Riwayat Fitur Kunci yang Telah Diimplementasikan
+1. **Responsivitas Mobile (Mobile-Friendly):** 
+   - Dasbor Siswa (Statistik Hero stack ke bawah di layar HP).
+   - Banner Pengumuman (Teks tidak memotong tombol silang di HP).
+   - Tabel Nilai & Tabel Siswa (Bisa digeser ke samping / `overflow-x-auto`).
+2. **Keamanan Data JSON:** Implementasi *Atomic Write* di seluruh *API Route* (`scores`, `users`, `announcement`).
+3. **Penyesuaian Next.js 16:** Memperbaiki *TypeScript Strict Mode* di mana `params` pada rute dinamis (*Dynamic Routes*) diwajibkan berupa `Promise`.
+4. **Catatan Kaki (Footer):** Penambahan footer kustom "Design by Adiningtyas Yuli Purwanto, S.Kom" di halaman Login, Dasbor Guru, dan Dasbor Siswa.
+5. **Manajemen Guru (CRUD):** 
+   - Fitur baru di Dasbor Guru (`TeacherManager.tsx`).
+   - Memungkinkan penambahan guru baru, edit nama, mengaktifkan/menonaktifkan (suspend) akses login guru, dan hapus data guru.
+6. **Panduan Proxmox:** Tersedia file `PANDUAN_INSTALASI_PROXMOX.md` sebagai panduan mandiri untuk instalasi server dari nol.
+
+## 🛠️ Catatan Khusus
+- Server Proxmox LXC harus disetel **"Start at boot: Yes"** pada menu Options agar web otomatis menyala setelah listrik mati.
+- File `db.ts` dan migrasi Prisma telah dihapus karena proyek berkomitmen menggunakan JSON Atomic Write demi kelancaran dan kemudahan portabilitas.
