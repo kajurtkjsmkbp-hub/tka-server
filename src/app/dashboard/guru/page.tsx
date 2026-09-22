@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { labData } from '@/data/labData';
 import AnnouncementManager from './AnnouncementManager';
+import TeacherManager from './TeacherManager';
 
 function getStudentsData() {
   // Read Users DB
@@ -83,10 +84,26 @@ function getStudentsData() {
   });
 }
 
+function getTeachersData() {
+  const dbPath = path.join(process.cwd(), 'data', 'db.json');
+  if (fs.existsSync(dbPath)) {
+    const rawData = fs.readFileSync(dbPath, 'utf8');
+    const users = JSON.parse(rawData).users || [];
+    return users.filter((u: any) => u.role === 'guru').map((t: any) => ({
+      id: t.id || t.username,
+      username: t.username,
+      fullName: t.fullName,
+      isActive: t.isActive !== false
+    }));
+  }
+  return [];
+}
+
 export const dynamic = 'force-dynamic';
 
 export default async function GuruDashboard() {
   const students = getStudentsData();
+  const teachers = getTeachersData();
 
   let totalScore = 0;
   let countWithScore = 0;
@@ -168,6 +185,9 @@ export default async function GuruDashboard() {
         <div className="mb-12">
           <AnnouncementManager />
         </div>
+
+        {/* Manajemen Guru */}
+        <TeacherManager initialTeachers={teachers} />
 
         {/* Monitoring Siswa */}
         <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100 overflow-hidden">
