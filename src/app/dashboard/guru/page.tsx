@@ -60,15 +60,27 @@ function getStudentsData() {
       }
     }
 
-    // Average for S1 latihan only
-    const s1Latihans = [];
-    const s2Latihans = [];
-    for (let p = 1; p <= 12; p++) {
-      if (moduleScores[`s1-p${p}`].latihan !== null) s1Latihans.push(moduleScores[`s1-p${p}`].latihan!);
-      if (moduleScores[`s2-p${p}`].latihan !== null) s2Latihans.push(moduleScores[`s2-p${p}`].latihan!);
-    }
-    const avgS1 = s1Latihans.length > 0 ? Math.round(s1Latihans.reduce((a, b) => a + b, 0) / s1Latihans.length) : 0;
-    const avgS2 = s2Latihans.length > 0 ? Math.round(s2Latihans.reduce((a, b) => a + b, 0) / s2Latihans.length) : 0;
+    const calculateSemesterGrade = (semester: number) => {
+      let totalLatihan = 0;
+      let sumMaxLatihan = 12 * 100;
+      let totalLab = 0;
+      let sumMaxLab = 0;
+
+      for (let p = 1; p <= 12; p++) {
+        const key = `s${semester}-p${p}`;
+        totalLatihan += moduleScores[key].latihan || 0;
+        totalLab += moduleScores[key].lab || 0;
+        const labDef = (labData as any)[key];
+        sumMaxLab += labDef && labDef.challenges ? labDef.challenges.reduce((sum: number, c: any) => sum + (c.poin || 0), 0) : 0;
+      }
+
+      const avgLatihan = sumMaxLatihan > 0 ? (totalLatihan / sumMaxLatihan) * 100 : 0;
+      const avgLab = sumMaxLab > 0 ? (totalLab / sumMaxLab) * 100 : 0;
+      return Number(((avgLatihan + avgLab) / 2).toFixed(1));
+    };
+
+    const avgS1 = calculateSemesterGrade(1);
+    const avgS2 = calculateSemesterGrade(2);
 
     return {
       id: student.id || student.username,

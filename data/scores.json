@@ -438,5 +438,53 @@
     "materiId": "s1-p4-lab-chal5",
     "score": 10,
     "timestamp": "2026-09-22T09:41:02.926Z"
+  },
+  {
+    "username": "khanza",
+    "fullName": "Sakila Khanza Fadilah",
+    "kelas": "XII TKJ 1",
+    "materiId": "s1-p1-lab-chal1",
+    "score": 10,
+    "timestamp": "2026-09-22T14:31:49.481Z"
+  },
+  {
+    "username": "khanza",
+    "fullName": "Sakila Khanza Fadilah",
+    "kelas": "XII TKJ 1",
+    "materiId": "s1-p1-lab-chal2",
+    "score": 10,
+    "timestamp": "2026-09-22T14:31:56.789Z"
+  },
+  {
+    "username": "khanza",
+    "fullName": "Sakila Khanza Fadilah",
+    "kelas": "XII TKJ 1",
+    "materiId": "s1-p1-lab-chal3",
+    "score": 10,
+    "timestamp": "2026-09-22T14:32:03.199Z"
+  },
+  {
+    "username": "khanza",
+    "fullName": "Sakila Khanza Fadilah",
+    "kelas": "XII TKJ 1",
+    "materiId": "s1-p1-lab-chal4",
+    "score": 10,
+    "timestamp": "2026-09-22T14:32:08.463Z"
+  },
+  {
+    "username": "khanza",
+    "fullName": "Sakila Khanza Fadilah",
+    "kelas": "XII TKJ 1",
+    "materiId": "s1-p1-lab-chal5",
+    "score": 10,
+    "timestamp": "2026-09-22T14:32:13.903Z"
+  },
+  {
+    "username": "khanza",
+    "fullName": "Sakila Khanza Fadilah",
+    "kelas": "XII TKJ 1",
+    "materiId": "s1-p1",
+    "score": 0,
+    "timestamp": "2026-09-22T14:32:45.906Z"
   }
 ]

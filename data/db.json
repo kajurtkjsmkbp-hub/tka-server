@@ -43,6 +43,13 @@
       "kelas": "XII TKJ 1",
       "jurusan": "Teknik Komputer dan Jaringan",
       "role": "siswa"
+    },
+    {
+      "id": "1790079097797",
+      "fullName": "Adiningtyas Yuli Purwanto,S.Kom",
+      "username": "admin",
+      "password": "admin",
+      "role": "guru"
     }
   ]
 }

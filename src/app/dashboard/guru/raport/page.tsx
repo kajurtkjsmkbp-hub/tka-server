@@ -39,14 +39,40 @@ function getStudentsData() {
       }
     }
 
-    const s1Latihans = studentScores.filter((s: any) => s.materiId.startsWith('s1-p') && !s.materiId.includes('-lab-chal'));
-    const s2Latihans = studentScores.filter((s: any) => s.materiId.startsWith('s2-p') && !s.materiId.includes('-lab-chal'));
-    
-    const avgS1 = s1Latihans.length > 0 ? Math.round(s1Latihans.reduce((a, b) => a + b.score, 0) / s1Latihans.length) : 0;
-    const avgS2 = s2Latihans.length > 0 ? Math.round(s2Latihans.reduce((a, b) => a + b.score, 0) / s2Latihans.length) : 0;
+    const calculateSemesterGrade = (semester: number) => {
+      let totalLatihan = 0;
+      let sumMaxLatihan = 12 * 100;
+      let totalLab = 0;
+      let sumMaxLab = 0;
 
-    let overallAvg = 0;
-    if (avgS1 > 0 && avgS2 > 0) overallAvg = Math.round((avgS1 + avgS2) / 2);
+      for (let p = 1; p <= 12; p++) {
+        const key = `s${semester}-p${p}`;
+        const latihanEntry = studentScores.find((s: any) => s.materiId === key);
+        const labChallenges = studentScores.filter((s: any) => s.materiId.startsWith(key + '-lab-chal'));
+        
+        totalLatihan += latihanEntry ? latihanEntry.score : 0;
+        
+        // Sum lab scores
+        const doneChalIds = new Set();
+        labChallenges.forEach(c => {
+          totalLab += c.score;
+          doneChalIds.add(c.materiId);
+        });
+
+        const labDef = (labData as any)[key];
+        sumMaxLab += labDef && labDef.challenges ? labDef.challenges.reduce((sum: number, c: any) => sum + (c.poin || 0), 0) : 0;
+      }
+
+      const avgLatihan = sumMaxLatihan > 0 ? (totalLatihan / sumMaxLatihan) * 100 : 0;
+      const avgLab = sumMaxLab > 0 ? (totalLab / sumMaxLab) * 100 : 0;
+      return Number(((avgLatihan + avgLab) / 2).toFixed(1));
+    };
+
+    const avgS1 = calculateSemesterGrade(1);
+    const avgS2 = calculateSemesterGrade(2);
+
+    let overallAvg: number = 0;
+    if (avgS1 > 0 && avgS2 > 0) overallAvg = Number(((avgS1 + avgS2) / 2).toFixed(1));
     else if (avgS1 > 0) overallAvg = avgS1;
     else if (avgS2 > 0) overallAvg = avgS2;
 
