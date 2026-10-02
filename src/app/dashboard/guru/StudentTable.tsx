@@ -90,32 +90,63 @@ export default function StudentTable({ initialStudents }: { initialStudents: Stu
     }
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleEdit = (student: any) => {
-    setEditingStudent({ ...student });
+    setEditingStudent({ 
+      ...student,
+      newUsername: student.username,
+      password: ''
+    });
+    setShowPassword(false);
   };
 
   const handleSave = async () => {
     if (!editingStudent) return;
+    if (!editingStudent.name || !editingStudent.name.trim()) {
+      alert('Nama lengkap tidak boleh kosong');
+      return;
+    }
+    if (!editingStudent.newUsername || !editingStudent.newUsername.trim()) {
+      alert('Username / ID Login tidak boleh kosong');
+      return;
+    }
+
+    setIsSaving(true);
     try {
       const res = await fetch(`/api/users/${editingStudent.username}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          fullName: editingStudent.name,
-          kelas: editingStudent.kelas,
+          fullName: editingStudent.name.trim(),
+          newUsername: editingStudent.newUsername.trim(),
+          kelas: editingStudent.kelas ? editingStudent.kelas.trim() : '',
           isActive: editingStudent.isActive,
+          password: editingStudent.password && editingStudent.password.trim() !== '' ? editingStudent.password.trim() : undefined,
         }),
       });
+      const data = await res.json();
       if (res.ok) {
-        setStudents(students.map(s => s.username === editingStudent.username ? editingStudent : s));
+        const updatedTarget = editingStudent.newUsername.trim();
+        setStudents(students.map(s => s.username === editingStudent.username ? {
+          ...s,
+          username: updatedTarget,
+          name: editingStudent.name.trim(),
+          kelas: editingStudent.kelas ? editingStudent.kelas.trim() : '',
+          isActive: editingStudent.isActive
+        } : s));
         setEditingStudent(null);
+        alert(`Data siswa "${editingStudent.name}" berhasil disimpan!`);
         router.refresh();
       } else {
-        alert('Gagal mengedit siswa');
+        alert(data.error || 'Gagal mengedit data siswa');
       }
     } catch (e) {
       console.error(e);
-      alert('Terjadi kesalahan saat mengedit');
+      alert('Terjadi kesalahan jaringan saat mengedit siswa');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -363,51 +394,190 @@ export default function StudentTable({ initialStudents }: { initialStudents: Stu
 
       {/* Edit Modal */}
       {editingStudent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
-            <h3 className="text-xl font-bold text-slate-800 mb-4">Edit Data Siswa</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 sm:p-8 border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between mb-5 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold">
+                  ✏️
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-slate-800">Edit Data & Akses Siswa</h3>
+                  <p className="text-xs text-slate-400 font-medium">Ubah identitas, username login, atau reset password siswa.</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setEditingStudent(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-sm transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
             <div className="space-y-4">
+              {/* Nama Lengkap */}
               <div>
-                <label className="block text-sm font-semibold text-slate-600 mb-1">Nama Lengkap</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                  Nama Lengkap Siswa
+                </label>
                 <input 
                   type="text" 
                   value={editingStudent.name} 
                   onChange={(e) => setEditingStudent({...editingStudent, name: e.target.value})}
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                  placeholder="Masukkan nama lengkap siswa..."
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm font-semibold text-slate-800 transition-all"
                 />
               </div>
+
+              {/* Username / Login ID */}
               <div>
-                <label className="block text-sm font-semibold text-slate-600 mb-1">Kelas</label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Username / ID Login
+                  </label>
+                  <span className="text-[11px] text-indigo-600 font-bold">Digunakan untuk login</span>
+                </div>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-bold text-sm">
+                    @
+                  </span>
+                  <input 
+                    type="text" 
+                    value={editingStudent.newUsername} 
+                    onChange={(e) => setEditingStudent({...editingStudent, newUsername: e.target.value})}
+                    placeholder="Username login siswa..."
+                    className="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm font-bold text-slate-800 transition-all font-mono"
+                  />
+                </div>
+                <p className="text-[11px] text-slate-400 mt-1">
+                  *Jika username diubah, seluruh riwayat nilai & kuis siswa otomatis dialihkan ke username baru.
+                </p>
+              </div>
+
+              {/* Password Baru (Reset Password) */}
+              <div className="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/80">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                    <span>🔑</span> Reset Password Siswa
+                  </label>
+                  <span className="text-[10px] font-bold text-amber-700 uppercase bg-amber-100 px-2 py-0.5 rounded-full">
+                    Opsional
+                  </span>
+                </div>
+
+                <div className="relative mt-1">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    value={editingStudent.password || ''} 
+                    onChange={(e) => setEditingStudent({...editingStudent, password: e.target.value})}
+                    placeholder="Kosongkan jika password tidak ingin diubah"
+                    className="w-full pl-4 pr-11 py-2.5 bg-white border border-amber-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none text-sm font-semibold text-slate-800 transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 text-sm font-bold"
+                  >
+                    {showPassword ? "🙈" : "👁️"}
+                  </button>
+                </div>
+
+                {/* Preset Fast Reset Buttons */}
+                <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                  <span className="text-[11px] font-semibold text-slate-500">Preset cepat:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingStudent({...editingStudent, password: 'siswa123'});
+                      setShowPassword(true);
+                    }}
+                    className="px-2.5 py-1 bg-white hover:bg-amber-100 text-amber-800 text-[11px] font-bold rounded-lg border border-amber-300 transition-colors shadow-xs"
+                  >
+                    siswa123
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingStudent({...editingStudent, password: '123456'});
+                      setShowPassword(true);
+                    }}
+                    className="px-2.5 py-1 bg-white hover:bg-amber-100 text-amber-800 text-[11px] font-bold rounded-lg border border-amber-300 transition-colors shadow-xs"
+                  >
+                    123456
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const randPass = Math.floor(100000 + Math.random() * 900000).toString();
+                      setEditingStudent({...editingStudent, password: randPass});
+                      setShowPassword(true);
+                    }}
+                    className="px-2.5 py-1 bg-white hover:bg-amber-100 text-amber-800 text-[11px] font-bold rounded-lg border border-amber-300 transition-colors shadow-xs"
+                  >
+                    🎲 6-Digit Acak
+                  </button>
+                </div>
+                <p className="text-[11px] text-amber-800/80 mt-2">
+                  Gunakan fitur ini jika siswa lupa kata sandi. Beritahu password baru kepada siswa setelah disimpan.
+                </p>
+              </div>
+
+              {/* Kelas */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                  Rombel / Kelas
+                </label>
                 <input 
                   type="text" 
                   value={editingStudent.kelas} 
                   onChange={(e) => setEditingStudent({...editingStudent, kelas: e.target.value})}
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                  placeholder="Contoh: X TKJ 1"
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm font-semibold text-slate-800 transition-all"
                 />
               </div>
-              <div className="flex items-center gap-2 mt-4">
-                <input 
-                  type="checkbox" 
-                  id="isActive"
-                  checked={editingStudent.isActive} 
-                  onChange={(e) => setEditingStudent({...editingStudent, isActive: e.target.checked})}
-                  className="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
-                />
-                <label htmlFor="isActive" className="text-sm font-semibold text-slate-700">Status Aktif</label>
+
+              {/* Status Akun Aktif */}
+              <div className="pt-2">
+                <label className="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors">
+                  <input 
+                    type="checkbox" 
+                    id="isActive"
+                    checked={editingStudent.isActive} 
+                    onChange={(e) => setEditingStudent({...editingStudent, isActive: e.target.checked})}
+                    className="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
+                  />
+                  <div>
+                    <span className="text-sm font-bold text-slate-800 block">Akun Siswa Aktif</span>
+                    <span className="text-xs text-slate-400 block">Jika tidak dicentang, siswa akan diblokir dari login ke aplikasi.</span>
+                  </div>
+                </label>
               </div>
             </div>
-            <div className="mt-8 flex justify-end gap-3">
+
+            {/* Modal Actions */}
+            <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
               <button 
+                type="button"
+                disabled={isSaving}
                 onClick={() => setEditingStudent(null)}
-                className="px-5 py-2 text-slate-600 font-semibold hover:bg-slate-100 rounded-lg transition-colors"
+                className="px-5 py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl transition-colors text-sm"
               >
                 Batal
               </button>
               <button 
+                type="button"
+                disabled={isSaving}
                 onClick={handleSave}
-                className="px-5 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
+                className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/30 text-sm flex items-center gap-2"
               >
-                Simpan Perubahan
+                {isSaving ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+                    <span>Menyimpan...</span>
+                  </>
+                ) : (
+                  <span>Simpan Perubahan</span>
+                )}
               </button>
             </div>
           </div>

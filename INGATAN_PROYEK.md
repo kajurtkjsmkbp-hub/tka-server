@@ -54,6 +54,10 @@ Dokumen ini berfungsi sebagai memori permanen proyek untuk AI dan Pengembang. Be
     - Memungkinkan guru memilih semester dan pertemuan dengan cepat melalui panel interaktif.
     - Menampilkan nomor soal, pertanyaan, 4 pilihan opsi (A, B, C, D), penyorotan visual kunci jawaban yang benar, serta kotak pembahasan pedagogis dan analisis ilmiah untuk setiap soal.
     - Dilengkapi filter pencarian teks/keyword instan, navigator nomor soal (1 s.d. 50), toggle buka/tutup pembahasan, dan tombol cetak/ekspor PDF.
+12. **Edit Username / ID Login & Reset Password Siswa oleh Guru:**
+    - Pada dasbor guru di tab "Data Siswa" (`StudentTable.tsx`), tombol aksi "Edit Siswa" kini memungkinkan guru mengubah **Username / ID Login** siswa dan melakukan **Reset Password**.
+    - Dilengkapi fitur validasi keunikan username, toggle lihat/sembunyikan password, serta tombol bantuan preset cepat (`siswa123`, `123456`, atau 6-digit acak) untuk memudahkan guru saat siswa lupa kredensial akun.
+    - Pada API backend (`/api/users/[username]`), perubahan username secara otomatis dan atomik memperbarui seluruh riwayat nilai kuis & lab siswa di `data/scores.json` dan aktivitas di `data/ping.json` ke username baru, menjamin progres belajar siswa tetap utuh dan aman.
 
 ## 🛠️ Catatan Khusus
 - Server Proxmox LXC harus disetel **"Start at boot: Yes"** pada menu Options agar web otomatis menyala setelah listrik mati.
