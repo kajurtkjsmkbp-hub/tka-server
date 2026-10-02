@@ -24,11 +24,11 @@ function writeDB(data: any) {
   fs.renameSync(tempPath, dbPath);
 }
 
-// POST: Simpan skor baru
+// POST: Simpan skor baru atau update skor remidi
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { username, fullName, kelas, materiId, score } = body;
+    const { username, fullName, kelas, materiId, score, isRemidi } = body;
 
     if (!username || !materiId || score === undefined) {
       return NextResponse.json({ error: 'Data tidak lengkap' }, { status: 400 });
@@ -39,20 +39,42 @@ export async function POST(request: Request) {
     // Cek apakah siswa sudah pernah mengerjakan materi ini
     const existingIndex = scores.findIndex((s: any) => s.username === username && s.materiId === materiId);
     
-    const newScore = {
-      username,
-      fullName,
-      kelas,
-      materiId,
-      score,
-      timestamp: new Date().toISOString()
-    };
-
     if (existingIndex >= 0) {
-      // Update skor (atau bisa juga pilih skor tertinggi, tapi di sini kita replace)
-      scores[existingIndex] = newScore;
+      const existing = scores[existingIndex];
+      
+      // Hanya izinkan remidi jika skor sebelumnya < KKM (75)
+      if (isRemidi) {
+        if (existing.score >= 75) {
+          return NextResponse.json({ error: 'Nilai sudah tuntas KKM, tidak bisa remidi.' }, { status: 400 });
+        }
+        
+        // Update skor remidi - simpan skor tertinggi
+        const bestScore = Math.max(existing.score, score);
+        scores[existingIndex] = {
+          ...existing,
+          score: bestScore,
+          lastScore: score,
+          attemptCount: (existing.attemptCount || 1) + 1,
+          isRemidi: true,
+          timestamp: new Date().toISOString()
+        };
+      } else {
+        // Submit pertama kali tapi ternyata sudah ada (edge case)
+        return NextResponse.json({ error: 'Kamu sudah pernah mengerjakan latihan ini.' }, { status: 400 });
+      }
     } else {
-      scores.push(newScore);
+      // Submit pertama kali
+      scores.push({
+        username,
+        fullName,
+        kelas,
+        materiId,
+        score,
+        lastScore: score,
+        attemptCount: 1,
+        isRemidi: false,
+        timestamp: new Date().toISOString()
+      });
     }
 
     writeDB(scores);

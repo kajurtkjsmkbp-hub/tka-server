@@ -64,9 +64,12 @@ export default function SiswaDashboard() {
   };
 
 
-  // Strict check logic (same as Raport)
+  const KKM = 75; // Kriteria Ketuntasan Minimal
+
+  // Strict check logic: Latihan harus >= KKM DAN Lab selesai
   const isModuleStrictlyTuntas = (modulId: string) => {
-    const isLatihanDone = userScores.some(s => s.materiId === modulId);
+    const latihanScore = userScores.find(s => s.materiId === modulId);
+    const isLatihanTuntas = latihanScore ? latihanScore.score >= KKM : false;
     
     const labChallenges = userScores.filter(s => s.materiId.startsWith(modulId + "-lab-chal"));
     const doneChalIds = new Set(labChallenges.map(c => c.materiId));
@@ -76,12 +79,21 @@ export default function SiswaDashboard() {
     
     const isLabDone = totalChallenges === 0 ? true : (doneChalIds.size >= totalChallenges);
     
-    return isLatihanDone && isLabDone;
+    return isLatihanTuntas && isLabDone;
+  };
+
+  // Cek apakah siswa sudah mengerjakan tapi belum tuntas KKM (perlu remidi)
+  const isModuleNeedRemidi = (modulId: string) => {
+    const latihanScore = userScores.find(s => s.materiId === modulId);
+    return latihanScore ? latihanScore.score < KKM : false;
   };
 
   const getModulStatus = (modulId: string, index: number, semester: number) => {
     const tuntas = isModuleStrictlyTuntas(modulId);
     if (tuntas) return 'Selesai';
+    
+    // Cek apakah perlu remidi (sudah dikerjakan tapi di bawah KKM)
+    if (isModuleNeedRemidi(modulId)) return 'Remidi';
     
     if (semester === 1) {
       if (index === 0) return 'Proses';
@@ -143,7 +155,9 @@ export default function SiswaDashboard() {
     // Status visual
     if (modul.status === 'Selesai') {
       gradientBg = "bg-emerald-950/30 border-emerald-500/30 ring-1 ring-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]";
-      icon = "\u2705"; } else if (modul.status === 'Proses') {
+      icon = "\u2705"; } else if (modul.status === 'Remidi') {
+      gradientBg = "bg-amber-950/40 border-amber-500/50 ring-2 ring-amber-400/40 shadow-[0_0_20px_rgba(245,158,11,0.25)] animate-pulse";
+      icon = "⚠️"; } else if (modul.status === 'Proses') {
       gradientBg = "bg-slate-800/80 border-sky-400/50 ring-2 ring-sky-400/40 shadow-[0_0_20px_rgba(56,189,248,0.2)] scale-[1.02]";
       icon = "\u25B6\uFE0F"; } else {
       gradientBg = "bg-[#0f172a] border-slate-700/50 opacity-60";
@@ -162,6 +176,14 @@ export default function SiswaDashboard() {
                   <h3 className="text-lg font-black text-white mb-2 leading-tight drop-shadow-md">
             {modul.title}
           </h3>
+          
+          {/* Badge Remidi */}
+          {modul.status === 'Remidi' && (
+            <div className="bg-amber-500/20 border border-amber-400/50 rounded-xl px-3 py-2 mb-2">
+              <p className="text-xs font-black text-amber-300 uppercase tracking-wider">⚠️ Perlu Remidi!</p>
+              <p className="text-[10px] text-amber-200/80 mt-0.5">Nilai belum KKM ({KKM}). Pelajari ulang &amp; kerjakan remidi.</p>
+            </div>
+          )}
           
           {modul.status !== 'Terkunci' && (
             <div className="flex gap-2 mb-3 mt-1">

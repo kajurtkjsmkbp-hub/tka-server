@@ -45,6 +45,8 @@ export default function SiswaRaport() {
     "Generative AI & Etika AI", "AIoT (AI & Internet of Things)", "Deployment AI & API"
   ];
 
+  const KKM = 75; // Kriteria Ketuntasan Minimal
+
   const getModuleProgress = (id: string, title: string) => {
     // 1. Latihan Score
     const latihanScoreData = userScores.find(s => s.materiId === id);
@@ -65,7 +67,10 @@ export default function SiswaRaport() {
     const maxLabScore = labDef && labDef.challenges ? labDef.challenges.reduce((sum: number, c: any) => sum + (c.poin || 0), 0) : 0;
     
     const isLatihanDone = latihanScore !== null;
+    const isLatihanTuntas = latihanScore !== null && latihanScore >= KKM;
     const isLabDone = totalChallenges === 0 ? true : (doneChalIds.size >= totalChallenges);
+    const needRemidi = isLatihanDone && !isLatihanTuntas;
+    const attemptCount = latihanScoreData ? (latihanScoreData.attemptCount || 1) : 0;
 
     return {
       id,
@@ -76,8 +81,11 @@ export default function SiswaRaport() {
       labDoneCount: doneChalIds.size,
       totalChallenges,
       isLatihanDone,
+      isLatihanTuntas,
       isLabDone,
-      isTuntas: isLatihanDone && isLabDone
+      needRemidi,
+      attemptCount,
+      isTuntas: isLatihanTuntas && isLabDone
     };
   };
 

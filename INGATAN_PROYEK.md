@@ -40,6 +40,15 @@ Dokumen ini berfungsi sebagai memori permanen proyek untuk AI dan Pengembang. Be
 6. **Panduan Proxmox:** Tersedia file `PANDUAN_INSTALASI_PROXMOX.md` sebagai panduan mandiri untuk instalasi server dari nol.
 7. **Rekap Nilai Siswa SMT 1 & SMT 2:** Penambahan kolom khusus "Raport SMT 1", "Raport SMT 2", dan "Nilai Akhir" pada tabel Rekap Nilai dasbor Guru.
 8. **Sinkronisasi Algoritma Kalkulasi Nilai:** Sinkronisasi rumus perhitungan nilai pada tabel Guru agar selaras 100% dengan Raport Siswa (rata-rata 50% Latihan + 50% Virtual Lab). Sebelumnya terdapat bug di mana Guru hanya melihat rata-rata Latihan saja.
+9. **Standarisasi Bank Soal Resmi (1.200 Soal Unik):**
+   - Mengaudit dan merekonstruksi total 24 modul (Semester 1 P1-P12 dan Semester 2 P1-P12).
+   - Setiap pertemuan memiliki tepat 50 soal pilihan ganda yang 100% UNIK dan berbeda (tanpa duplikasi template), mencakup materi koding Python, rekayasa Machine Learning, Deep Learning, NLP, AIoT, dan Deployment AI.
+10. **Sistem Remedial & Pembatasan Ketuntasan KKM (Batas 75):**
+    - Kriteria Ketuntasan Minimal (KKM) ditetapkan bernilai **75**.
+    - Siswa yang memperoleh skor < 75 **tidak diperbolehkan melangkah ke pertemuan berikutnya**. Modul selanjutnya otomatis berstatus 'Terkunci' sampai KKM tercapai.
+    - Pada dasbor siswa, modul yang belum tuntas KKM menampilkan kartu peringatan khusus berstatus 'Remidi' dengan animasi dan instruksi untuk mempelajari ulang materi.
+    - Halaman kuis menyediakan tombol **"Mulai Remedial"** dan **"Pelajari Ulang Materi"**. Saat mode remidi diaktifkan, 50 soal diacak urutannya (*shuffle*) agar siswa tidak menghafal letak jawaban.
+    - API `/api/scores` menyimpan riwayat jumlah percobaan (`attemptCount`), histori skor terakhir (`lastScore`), status remidi (`isRemidi`), dan secara aman mempertahankan nilai tertinggi siswa. Siswa yang sudah tuntas (>= 75) tidak dapat mengambil remidi.
 
 ## 🛠️ Catatan Khusus
 - Server Proxmox LXC harus disetel **"Start at boot: Yes"** pada menu Options agar web otomatis menyala setelah listrik mati.
