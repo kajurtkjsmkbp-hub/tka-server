@@ -138,6 +138,9 @@ export default async function GuruDashboard() {
               <p className="text-indigo-200 mt-2 text-lg">Pantau dan kelola progres belajar siswa dengan mudah.</p>
             </div>
             <div className="flex flex-wrap justify-center md:justify-end gap-3">
+              <Link href="/dashboard/guru/soal-kuis" className="px-5 py-2.5 text-white bg-indigo-600 hover:bg-indigo-500 rounded-full font-bold shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 flex items-center gap-2">
+                <span>📝</span> Soal Kuis & Kunci
+              </Link>
               <Link href="/dashboard/leaderboard" className="px-5 py-2.5 text-white bg-amber-500 hover:bg-amber-600 rounded-full font-bold shadow-[0_0_15px_rgba(245,158,11,0.5)] transition-all hover:scale-105 flex items-center gap-2">
                 <span>🏆</span> Leaderboard
               </Link>
@@ -193,6 +196,30 @@ export default async function GuruDashboard() {
           </div>
         </div>
         
+        {/* Akses Cepat Bank Soal & Kunci Jawaban */}
+        <div className="mb-12 bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900 p-6 md:p-8 rounded-3xl text-white shadow-xl shadow-indigo-950/20 border border-indigo-700/30 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-3xl shadow-inner shrink-0">
+              📝
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/30 text-amber-300 text-xs font-black uppercase tracking-wider mb-2">
+                <span>⭐</span> Fitur Baru Guru
+              </div>
+              <h3 className="text-2xl font-black text-white">Bank Soal Kuis & Kunci Jawaban (1.200 Soal)</h3>
+              <p className="text-indigo-200 text-sm mt-1 max-w-2xl font-normal">
+                Pantau 50 soal pilihan ganda per pertemuan (Semester 1 P1-P12 & Semester 2 P1-P12) lengkap dengan kunci jawaban terverifikasi dan analisis pembahasan pedagogis.
+              </p>
+            </div>
+          </div>
+          <Link 
+            href="/dashboard/guru/soal-kuis" 
+            className="px-6 py-3.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 rounded-2xl font-black shadow-lg shadow-amber-500/25 transition-all hover:scale-105 flex items-center gap-2 shrink-0 text-sm md:text-base"
+          >
+            <span>🔍</span> Buka Bank Soal & Kunci
+          </Link>
+        </div>
+
         {/* Broadcast Pengumuman */}
         <div className="mb-12">
           <AnnouncementManager />

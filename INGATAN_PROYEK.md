@@ -49,6 +49,11 @@ Dokumen ini berfungsi sebagai memori permanen proyek untuk AI dan Pengembang. Be
     - Pada dasbor siswa, modul yang belum tuntas KKM menampilkan kartu peringatan khusus berstatus 'Remidi' dengan animasi dan instruksi untuk mempelajari ulang materi.
     - Halaman kuis menyediakan tombol **"Mulai Remedial"** dan **"Pelajari Ulang Materi"**. Saat mode remidi diaktifkan, 50 soal diacak urutannya (*shuffle*) agar siswa tidak menghafal letak jawaban.
     - API `/api/scores` menyimpan riwayat jumlah percobaan (`attemptCount`), histori skor terakhir (`lastScore`), status remidi (`isRemidi`), dan secara aman mempertahankan nilai tertinggi siswa. Siswa yang sudah tuntas (>= 75) tidak dapat mengambil remidi.
+11. **Portal Bank Soal & Kunci Jawaban Guru (`/dashboard/guru/soal-kuis`):**
+    - Fitur khusus dasbor guru untuk memantau dan memverifikasi seluruh 1.200 butir soal kuis (Semester 1 P1-P12 dan Semester 2 P1-P12).
+    - Memungkinkan guru memilih semester dan pertemuan dengan cepat melalui panel interaktif.
+    - Menampilkan nomor soal, pertanyaan, 4 pilihan opsi (A, B, C, D), penyorotan visual kunci jawaban yang benar, serta kotak pembahasan pedagogis dan analisis ilmiah untuk setiap soal.
+    - Dilengkapi filter pencarian teks/keyword instan, navigator nomor soal (1 s.d. 50), toggle buka/tutup pembahasan, dan tombol cetak/ekspor PDF.
 
 ## 🛠️ Catatan Khusus
 - Server Proxmox LXC harus disetel **"Start at boot: Yes"** pada menu Options agar web otomatis menyala setelah listrik mati.
