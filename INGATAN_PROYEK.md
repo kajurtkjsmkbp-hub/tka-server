@@ -59,10 +59,26 @@ Dokumen ini berfungsi sebagai memori permanen proyek untuk AI dan Pengembang. Be
     - Dilengkapi fitur validasi keunikan username, toggle lihat/sembunyikan password, serta tombol bantuan preset cepat (`siswa123`, `123456`, atau 6-digit acak) untuk memudahkan guru saat siswa lupa kredensial akun.
     - Pada API backend (`/api/users/[username]`), perubahan username secara otomatis dan atomik memperbarui seluruh riwayat nilai kuis & lab siswa di `data/scores.json` dan aktivitas di `data/ping.json` ke username baru, menjamin progres belajar siswa tetap utuh dan aman.
 
+## 🔄 Mekanisme Transisi Nilai Eksisting (Pembaruan Bank Soal & KKM 75)
+Ketika bank soal dan sistem KKM diperbarui, sistem menangani nilai siswa lama tanpa merusak data:
+1. **Siswa dengan Nilai Tuntas (Skor ≥ 75):**
+   - Nilai lama di `data/scores.json` tetap utuh 100%.
+   - Akses ke modul/pertemuan berikutnya tetap **Terbuka** (status: *Selesai*).
+   - Di halaman kuis, sistem langsung menampilkan status lulus/tuntas beserta nilai yang diperoleh. Siswa tidak diwajibkan mengulang.
+2. **Siswa dengan Nilai Belum Tuntas (Skor < 75):**
+   - Nilai lama tetap tersimpan sebagai histori (`lastScore` / `score`).
+   - Modul berikutnya **otomatis terkunci** demi menjaga standar kompetensi KKM 75.
+   - Dasbor siswa menampilkan kartu peringatan khusus berstatus **Remidi**.
+   - Saat siswa mengklik **"Mulai Remedial"**, sistem otomatis menyajikan bank soal baru (50 butir soal unik) dengan urutan nomor diacak (*shuffle*).
+   - Sistem menerapkan prinsip **Best Score** (skor tertinggi diambil) sehingga nilai siswa tidak akan turun jika remidi lebih rendah, dan jika mencapai ≥ 75 modul berikutnya langsung terbuka.
+3. **Data Rekap Guru & Raport:**
+   - Rekap nilai di portal Guru dan Raport Siswa tetap utuh dan sinkron, tidak ada data nilai yang hilang (*zero data loss*).
+
 ## 🛠️ Catatan Khusus
 - Server Proxmox LXC harus disetel **"Start at boot: Yes"** pada menu Options agar web otomatis menyala setelah listrik mati.
 - File `db.ts` dan migrasi Prisma telah dihapus karena proyek berkomitmen menggunakan JSON Atomic Write demi kelancaran dan kemudahan portabilitas.
 
-## ??? Keamanan Database (Git Ignore)
+## 🛡️ Keamanan Database (Git Ignore)
 - File JSON di dalam folder `data/` (seperti `db.json`, `scores.json`, `announcement.json`) **telah dikeluarkan dari pelacakan Git (untracked) dan dimasukkan ke `.gitignore`**. 
 - Tujuannya agar saat melakukan `git reset --hard` di server Proxmox, file database *live* tidak akan tertimpa/terhapus oleh database dari repo lokal.
+
