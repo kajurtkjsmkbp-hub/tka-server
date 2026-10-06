@@ -54,7 +54,8 @@ function getLeaderboardData() {
       id: student.id || student.username,
       username: student.username,
       name: student.fullName,
-      kelas: student.kelas,
+      kelas: student.kelas || '',
+      guruPengampu: student.guruPengampu || '',
       modulesCompleted,
       xp
     };
@@ -67,7 +68,22 @@ function getLeaderboardData() {
   });
 }
 
+function getTeachersData() {
+  const dbPath = path.join(process.cwd(), 'data', 'db.json');
+  if (fs.existsSync(dbPath)) {
+    const rawData = fs.readFileSync(dbPath, 'utf8');
+    const users = JSON.parse(rawData).users || [];
+    return users.filter((u: any) => u.role === 'guru').map((t: any) => ({
+      username: t.username,
+      fullName: t.fullName,
+      classes: Array.isArray(t.classes) ? t.classes : (t.classes ? [t.classes] : [])
+    }));
+  }
+  return [];
+}
+
 export default async function LeaderboardPage() {
   const data = getLeaderboardData();
-  return <LeaderboardUI data={data} />;
+  const teachers = getTeachersData();
+  return <LeaderboardUI data={data} teachers={teachers} />;
 }

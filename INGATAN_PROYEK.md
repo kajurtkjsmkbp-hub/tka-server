@@ -58,6 +58,44 @@ Dokumen ini berfungsi sebagai memori permanen proyek untuk AI dan Pengembang. Be
     - Pada dasbor guru di tab "Data Siswa" (`StudentTable.tsx`), tombol aksi "Edit Siswa" kini memungkinkan guru mengubah **Username / ID Login** siswa dan melakukan **Reset Password**.
     - Dilengkapi fitur validasi keunikan username, toggle lihat/sembunyikan password, serta tombol bantuan preset cepat (`siswa123`, `123456`, atau 6-digit acak) untuk memudahkan guru saat siswa lupa kredensial akun.
     - Pada API backend (`/api/users/[username]`), perubahan username secara otomatis dan atomik memperbarui seluruh riwayat nilai kuis & lab siswa di `data/scores.json` dan aktivitas di `data/ping.json` ke username baru, menjamin progres belajar siswa tetap utuh dan aman.
+13. **Penguatan Validasi Virtual Lab S1 (60 Soal):**
+    - Memperbaiki celah validasi di mana sebelumnya seluruh tantangan lab Semester 1 (S1-P1 s.d. S1-P12) hanya mengecek `['print']`.
+    - Kini seluruh 60 tantangan lab Semester 1 memiliki `checks` keyword spesifik (variabel, operator, syntax fungsi, teks output, dll.) sehingga siswa wajib menyelesaikan soal sesuai instruksi.
+14. **Identitas Guru & Notifikasi Selamat Datang (`TeacherHeader.tsx`):**
+    - Pada Dasbor Guru (`/dashboard/guru`), ditambahkan kartu identitas profil guru yang sedang aktif login (menampilkan Nama Lengkap, `@username`, badge Pengajar, status online).
+    - Dilengkapi banner notifikasi interaktif "Selamat Datang, [Nama Guru]!" dengan tanggal sesi aktif dan tombol tutup, serta tombol keluar (logout) yang aman dan bersih.
+15. **Sistem Multi-Guru & Pembagian Kelas Terintegrasi (Multi-Teacher & Multi-Class Architecture):**
+    - Mendukung banyak guru (hingga 10+ guru) di mana masing-masing guru dapat mengampu kelas yang berbeda-beda (misal: Guru A mengajar X TE 3 dan X TE 4). Dikonfigurasi dinamis melalui menu "Manajemen Guru & Pembagian Kelas".
+    - Pada halaman pendaftaran siswa (`/`), tersedia pilihan Guru Pengampu dan dropdown Kelas yang otomatis menyesuaikan kelas yang diajar oleh guru yang dipilih.
+    - Dasbor Guru (`/dashboard/guru`) dan Buku Nilai (`/dashboard/guru/raport`) secara otomatis menyaring data siswa, 4 kartu statistik (total siswa, siswa aktif, rata-rata kelas), filter rombel, dan ekspor PDF khusus untuk kelas yang diampu oleh guru yang sedang login.
+    - Dasbor Siswa (`/dashboard/siswa`) secara otomatis menampilkan identitas Guru Pengampu yang membimbing kelas siswa tersebut.
+    - Guru juga dapat mengubah kelas dan memindahkan penugasan Guru Pengampu siswa sewaktu-waktu melalui modal edit siswa di dasbor guru.
+16. **Leaderboard Eksklusif Per-Kelas & Top 3 Saja (`/dashboard/leaderboard`):**
+    - Papan peringkat (`Hall of Fame`) dipisah secara ketat per rombel kelas, tidak lagi digabung lintas kelas sekolah.
+    - **Siswa**: Otomatis terkunci dan hanya dapat melihat peringkat kelasnya sendiri demi menjaga kerahasiaan nilai antarkelas.
+    - **Guru**: Disediakan pemilih kelas yang otomatis menyesuaikan kelas-kelas yang diajar guru bersangkutan (misal: Guru Andi hanya melihat pilihan X TE 3 dan X TE 4).
+    - **Hanya Peringkat 1, 2, dan 3 (Top 3)**: Menampilkan podium juara 1 (Emas 👑), juara 2 (Perak 🥈), dan juara 3 (Perunggu 🥉). Seluruh daftar peringkat 4 ke bawah ditiadakan untuk kenyamanan dan privasi belajar siswa.
+17. **Proteksi Mutlak Akun Super Administrator (`admin` / Adiningtyas Yuli Purwanto):**
+    - Akun login `admin` (Adiningtyas Yuli Purwanto, S.Kom) diberi perlindungan mutlak baik di frontend maupun backend.
+    - Pada tabel Manajemen Guru (`TeacherManager.tsx`), tombol "Nonaktifkan" dan "Hapus" ditiadakan untuk akun `admin`, digantikan dengan badge `👑 Super Admin (Permanen)` dan `🔒 Dilindungi`.
+    - Pada API backend (`/api/users/[username]`), setiap upaya menonaktifkan (`isActive: false`) atau menghapus (`DELETE`) akun `admin` ditolak dengan status HTTP 403 Forbidden. Akun ini tidak dapat dinonaktifkan atau dihapus oleh guru lain.
+18. **Privasi Nilai Siswa & Penggantian Raport Menjadi Status Progres Pembelajaran:**
+    - Seluruh tampilan angka nilai kuantitatif (skor kuis, poin lab, dan nilai raport semester) di sisi akun siswa telah **ditiadakan/dihilangkan**.
+    - Siswa diarahkan untuk berkoordinasi dan mengecek nilai angka resmi secara langsung kepada Guru Pengampu masing-masing (banner nama guru pengampu ditampilkan jelas).
+    - Pada Beranda Siswa (`/dashboard/siswa`) dan Halaman Progres (`/dashboard/siswa/raport`), tampilan angka digantikan dengan **Status Ketuntasan Kualitatif**:
+      - **Status Modul**: `✅ Tuntas` / `⏳ Belum Tuntas`
+      - **Soal Kuis**: `✅ Tuntas` (jika ≥ KKM 75), `⚠️ Belum Tuntas (Remidi)` (jika < KKM), atau `⏳ Belum Dikerjakan`
+      - **Virtual Lab**: `✅ Tuntas (x/x)` atau `⏳ Belum Tuntas (x/x)`
+    - Tombol navigasi di dasbor siswa disesuaikan menjadi **"📋 Progres Belajar"**.
+19. **Optimasi Tata Letak Formulir Pendaftaran Siswa (`/`):**
+    - Menyusun ulang hierarki input pada form pendaftaran siswa agar lebih estetik dan ergonomis:
+      - **Nama Lengkap** berada di atas.
+      - **Username / ID Login** dan **Kata Sandi** kini diletakkan berdampingan secara proporsional dalam grid 2 kolom (satu kesatuan kredensial akun).
+      - Kotak penugasan sekolah (**Guru Pengampu, Kelas, dan Jurusan**) berada di bawahnya sebagai data akademik pelengkap sebelum tombol konfirmasi pendaftaran.
+20. **Pemberitahuan Bantuan Lupa Akun Login & Kata Sandi (`/`):**
+    - Di formulir pendaftaran siswa maupun formulir masuk/login, disematkan informasi bantuan praktis:
+      > *"Jika siswa lupa dengan login dan kata sandi, silakan hubungi: **Adiningtyas Yuli Purwanto, S.Kom**"*
+    - Memudahkan siswa saat mengalami kendala lupa password atau lupa ID login sehingga dapat langsung menghubungi Super Admin.
 
 ## 🔄 Mekanisme Transisi Nilai Eksisting (Pembaruan Bank Soal & KKM 75)
 Ketika bank soal dan sistem KKM diperbarui, sistem menangani nilai siswa lama tanpa merusak data:

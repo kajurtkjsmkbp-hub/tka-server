@@ -12,7 +12,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ user
   try {
     const { username } = await params;
     const body = await request.json();
-    const { fullName, kelas, jurusan, isActive, newUsername, password } = body;
+    const { fullName, kelas, jurusan, isActive, newUsername, password, classes, guruPengampu } = body;
 
     const dbPath = path.join(process.cwd(), 'data', 'db.json');
     if (!fs.existsSync(dbPath)) {
@@ -25,6 +25,16 @@ export async function PUT(request: Request, { params }: { params: Promise<{ user
     const userIndex = db.users.findIndex((u: any) => u.username === username);
     if (userIndex === -1) {
       return NextResponse.json({ error: "Siswa tidak ditemukan" }, { status: 404 });
+    }
+
+    // Proteksi akun Super Administrator (admin)
+    if (username.toLowerCase() === 'admin') {
+      if (isActive === false) {
+        return NextResponse.json({ error: "Akun Super Administrator utama (admin) dilindungi dan tidak dapat dinonaktifkan." }, { status: 403 });
+      }
+      if (newUsername && newUsername.trim().toLowerCase() !== 'admin') {
+        return NextResponse.json({ error: "Username akun Super Administrator (admin) tidak dapat diubah." }, { status: 403 });
+      }
     }
 
     // Check if newUsername is requested and different
@@ -88,11 +98,18 @@ export async function PUT(request: Request, { params }: { params: Promise<{ user
       db.users[userIndex].password = password.trim();
     }
 
-    // Update other fields
     if (fullName !== undefined) db.users[userIndex].fullName = fullName.trim();
     if (kelas !== undefined) db.users[userIndex].kelas = kelas.trim();
     if (jurusan !== undefined) db.users[userIndex].jurusan = jurusan;
     if (isActive !== undefined) db.users[userIndex].isActive = Boolean(isActive);
+    if (classes !== undefined) {
+      db.users[userIndex].classes = Array.isArray(classes) ? classes : (classes ? [classes] : []);
+    }
+    if (guruPengampu !== undefined) {
+      db.users[userIndex].guruPengampu = guruPengampu;
+      const teacherObj = db.users.find((u: any) => u.role === 'guru' && u.username === guruPengampu);
+      db.users[userIndex].guruPengampuName = teacherObj ? teacherObj.fullName : '';
+    }
 
     // Save db.json atomically
     writeAtomic(dbPath, db);
@@ -117,6 +134,11 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ u
 
     const rawData = fs.readFileSync(dbPath, 'utf8');
     const db = JSON.parse(rawData);
+
+    // Proteksi akun Super Administrator (admin)
+    if (username.toLowerCase() === 'admin') {
+      return NextResponse.json({ error: "Akun Super Administrator utama (admin) dilindungi dan tidak dapat dihapus." }, { status: 403 });
+    }
 
     const userIndex = db.users.findIndex((u: any) => u.username === username);
     if (userIndex === -1) {

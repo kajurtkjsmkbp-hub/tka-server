@@ -8,6 +8,7 @@ import AnnouncementBanner from './AnnouncementBanner';
 export default function SiswaDashboard() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [userScores, setUserScores] = useState<any[]>([]);
+  const [teacherInfo, setTeacherInfo] = useState<{ fullName: string; username: string } | null>(null);
 
   useEffect(() => {
     const savedUser = localStorage.getItem("currentUser");
@@ -22,6 +23,32 @@ export default function SiswaDashboard() {
           setUserScores(myScores);
         })
         .catch(err => console.error(err));
+
+      // Ambil data guru pengampu
+      fetch('/api/teachers')
+        .then(res => res.json())
+        .then(data => {
+          const list = data.teachers || [];
+          if (user.guruPengampu) {
+            const match = list.find((t: any) => t.username === user.guruPengampu);
+            if (match) {
+              setTeacherInfo({ fullName: match.fullName, username: match.username });
+              return;
+            }
+          }
+          if (user.kelas) {
+            const matchByClass = list.find((t: any) => t.classes && t.classes.includes(user.kelas.trim()));
+            if (matchByClass) {
+              setTeacherInfo({ fullName: matchByClass.fullName, username: matchByClass.username });
+              return;
+            }
+          }
+          const adminTeacher = list.find((t: any) => t.classes && t.classes.includes('SEMUA'));
+          if (adminTeacher) {
+            setTeacherInfo({ fullName: adminTeacher.fullName, username: adminTeacher.username });
+          }
+        })
+        .catch(console.error);
     }
   }, []);
 
@@ -186,29 +213,60 @@ export default function SiswaDashboard() {
           )}
           
           {modul.status !== 'Terkunci' && (
-            <div className="flex gap-2 mb-3 mt-1">
+            <div className="flex flex-col gap-1.5 mb-3 mt-1">
               {(() => {
-                const latihanScore = userScores.find(s => s.materiId === modul.id)?.score || 0;
+                const latihanEntry = userScores.find(s => s.materiId === modul.id);
+                const isLatihanDone = latihanEntry !== undefined;
+                const isLatihanTuntas = isLatihanDone && (latihanEntry.score || 0) >= KKM;
+                
                 const labChallenges = userScores.filter(s => s.materiId.startsWith(modul.id + "-lab-chal"));
                 const labDef = (labData as any)[modul.id];
                 const totalChallenges = labDef && labDef.challenges ? labDef.challenges.length : 0;
-                const labTotal = labChallenges.reduce((acc: any, curr: any) => acc + curr.score, 0);
-                const maxLabScore = labDef && labDef.challenges ? labDef.challenges.reduce((sum: any, chal: any) => sum + (chal.poin || 0), 0) : 0;
-                const labScore = labTotal;
+                const labChalsDone = labChallenges.length;
+                const isLabDone = totalChallenges === 0 || labChalsDone >= totalChallenges;
+                const isModulTuntas = isLatihanTuntas && isLabDone;
                 
                 return (
-                  <>
-                    <div className="flex-1 bg-slate-900/50 rounded-lg py-1.5 px-3 border border-slate-700/50 flex justify-between items-center shadow-inner">
-                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Latihan</span>
-                      <span className="text-sm font-black text-sky-400">{latihanScore}</span>
+                  <div className="space-y-1.5">
+                    {/* Status Keseluruhan Modul */}
+                    <div className="flex items-center justify-between bg-slate-900/80 rounded-xl py-1 px-2.5 border border-slate-700/60 shadow-inner">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Modul</span>
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${
+                        isModulTuntas 
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' 
+                          : 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
+                      }`}>
+                        {isModulTuntas ? '✅ Tuntas' : '⏳ Belum Tuntas'}
+                      </span>
                     </div>
-                    {totalChallenges > 0 && (
-                      <div className="flex-1 bg-slate-900/50 rounded-lg py-1.5 px-3 border border-slate-700/50 flex justify-between items-center shadow-inner">
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Lab</span>
-                        <span className="text-sm font-black text-fuchsia-400">{labScore}<span className="text-[10px] font-normal text-fuchsia-400/70">/{maxLabScore}</span></span>
+
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {/* Status Kuis */}
+                      <div className="bg-slate-900/50 rounded-lg py-1 px-2 border border-slate-700/40 flex justify-between items-center">
+                        <span className="text-[9px] text-slate-400 font-bold">Kuis</span>
+                        <span className={`text-[10px] font-black ${
+                          isLatihanTuntas ? 'text-emerald-400' : isLatihanDone ? 'text-rose-400' : 'text-slate-500'
+                        }`}>
+                          {isLatihanTuntas ? '✅ Tuntas' : isLatihanDone ? '⚠️ Remidi' : '⏳ Belum'}
+                        </span>
                       </div>
-                    )}
-                  </>
+
+                      {/* Status Lab */}
+                      {totalChallenges > 0 ? (
+                        <div className="bg-slate-900/50 rounded-lg py-1 px-2 border border-slate-700/40 flex justify-between items-center">
+                          <span className="text-[9px] text-slate-400 font-bold">Lab</span>
+                          <span className={`text-[10px] font-black ${isLabDone ? 'text-emerald-400' : 'text-amber-400'}`}>
+                            {isLabDone ? '✅ Tuntas' : `⏳ ${labChalsDone}/${totalChallenges}`}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="bg-slate-900/50 rounded-lg py-1 px-2 border border-slate-700/40 flex justify-between items-center">
+                          <span className="text-[9px] text-slate-500 font-medium">Lab</span>
+                          <span className="text-[10px] text-slate-500">-</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 );
               })()}
             </div>
@@ -275,9 +333,19 @@ export default function SiswaDashboard() {
               </div>
             </div>
             <div>
-              <div className="text-sky-300 font-bold uppercase tracking-widest text-sm mb-1">Level {Math.floor(totalExp / 1000) + 1} Novice</div>
+              <div className="text-sky-300 font-bold uppercase tracking-widest text-xs mb-1">Level {Math.floor(totalExp / 1000) + 1} Novice</div>
               <h1 className="text-3xl md:text-4xl font-black text-white">{userProfile.fullName}</h1>
-              <p className="text-slate-400 mt-1 font-medium">{userProfile.kelas} ' ID: {userProfile.username}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full bg-slate-800/90 border border-slate-700 text-xs font-bold text-slate-300 flex items-center gap-1.5 shadow-sm">
+                  <span>🏫</span> Kelas: <strong className="text-white">{userProfile.kelas}</strong>
+                </span>
+                <span className="px-3 py-1 rounded-full bg-slate-800/90 border border-slate-700 text-xs font-mono text-slate-400">
+                  ID: @{userProfile.username}
+                </span>
+                <span className="px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/40 text-xs font-bold text-indigo-200 flex items-center gap-1.5 shadow-sm">
+                  <span>👨‍🏫</span> Guru Pengampu: <strong className="text-amber-300">{teacherInfo ? teacherInfo.fullName : (userProfile.guruPengampuName || 'Adiningtyas Yuli Purwanto, S.Kom')}</strong>
+                </span>
+              </div>
             </div>
           </div>
           
@@ -300,7 +368,7 @@ export default function SiswaDashboard() {
               </Link>
               <div className="flex gap-2">
                 <Link href="/dashboard/siswa/raport" className="flex-1 px-4 py-2 text-center text-slate-900 bg-white hover:bg-sky-50 rounded-xl font-bold shadow-lg transition-colors text-sm">
-                  📊 Raport
+                  📋 Progres Belajar
                 </Link>
                 <button onClick={handleLogout} className="flex-1 px-4 py-2 text-center text-white bg-slate-800 hover:bg-slate-700 rounded-xl font-bold border border-slate-700 transition-colors text-sm">Keluar</button>
               </div>

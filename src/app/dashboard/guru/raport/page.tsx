@@ -2,6 +2,7 @@ import Link from 'next/link';
 import fs from 'fs';
 import path from 'path';
 import { labData } from '@/data/labData';
+import RaportTable from './RaportTable';
 
 function getStudentsData() {
   const dbPath = path.join(process.cwd(), 'data', 'db.json');
@@ -53,12 +54,9 @@ function getStudentsData() {
         totalLatihan += latihanEntry ? latihanEntry.score : 0;
         
         // Sum lab scores
-        const doneChalIds = new Set();
         labChallenges.forEach(c => {
           totalLab += c.score;
-          doneChalIds.add(c.materiId);
         });
-
         const labDef = (labData as any)[key];
         sumMaxLab += labDef && labDef.challenges ? labDef.challenges.reduce((sum: number, c: any) => sum + (c.poin || 0), 0) : 0;
       }
@@ -81,6 +79,8 @@ function getStudentsData() {
       username: student.username,
       name: student.fullName,
       kelas: student.kelas,
+      guruPengampu: student.guruPengampu || '',
+      guruPengampuName: student.guruPengampuName || '',
       modulesTaken: modulesCompleted,
       avgS1,
       avgS2,
@@ -90,75 +90,49 @@ function getStudentsData() {
   });
 }
 
+function getTeachersData() {
+  const dbPath = path.join(process.cwd(), 'data', 'db.json');
+  if (fs.existsSync(dbPath)) {
+    const rawData = fs.readFileSync(dbPath, 'utf8');
+    const users = JSON.parse(rawData).users || [];
+    return users.filter((u: any) => u.role === 'guru').map((t: any) => ({
+      id: t.id || t.username,
+      username: t.username,
+      fullName: t.fullName,
+      classes: Array.isArray(t.classes) ? t.classes : (t.classes ? [t.classes] : []),
+      isActive: t.isActive !== false
+    }));
+  }
+  return [];
+}
+
 export const dynamic = 'force-dynamic';
 
 export default async function GuruRaport() {
   const students = getStudentsData();
+  const teachers = getTeachersData();
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans p-8">
-      <div className="max-w-6xl mx-auto">
-        <header className="flex justify-between items-center mb-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+    <div className="min-h-screen bg-slate-50 font-sans p-6 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
           <div>
-            <h1 className="text-3xl font-bold text-slate-800">Rekap Nilai Siswa</h1>
-            <p className="text-slate-500 mt-1">Pantau perkembangan dan nilai evaluasi seluruh siswa KKA yang terdaftar.</p>
+            <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Buku Nilai / Raport Siswa</h1>
+            <p className="text-slate-500 mt-1 text-sm">
+              Rekapitulasi nilai latihan kuis dan virtual lab per semester yang disaring khusus untuk kelas yang Anda ajar.
+            </p>
           </div>
-          <div className="flex gap-3">
-            <Link href="/dashboard/guru/soal-kuis" className="px-5 py-2.5 text-white bg-indigo-600 rounded-xl font-bold hover:bg-indigo-500 transition-all flex items-center gap-1.5 shadow-sm">
-              <span>📝</span> Soal & Kunci Kuis
+          <div className="flex flex-wrap gap-2.5">
+            <Link href="/dashboard/guru/soal-kuis" className="px-4 py-2.5 text-white bg-indigo-600 rounded-xl font-bold hover:bg-indigo-500 transition-all flex items-center gap-1.5 shadow-sm text-sm">
+              <span>📝</span> Soal & Kunci
             </Link>
-            <Link href="/dashboard/guru" className="px-6 py-2.5 text-slate-600 bg-slate-100 rounded-xl font-bold hover:bg-slate-200 transition-all">
+            <Link href="/dashboard/guru" className="px-5 py-2.5 text-slate-700 bg-slate-100 rounded-xl font-bold hover:bg-slate-200 transition-all text-sm">
               Kembali ke Dasbor
             </Link>
           </div>
         </header>
 
-        <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/40 overflow-hidden border border-slate-100">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-widest border-b border-slate-100">
-                <th className="px-6 py-5 font-bold">Nama Siswa</th>
-                <th className="px-6 py-5 font-bold">Username</th>
-                <th className="px-6 py-5 font-bold">Kelas</th>
-                <th className="px-6 py-5 font-bold text-center">Modul</th>
-                <th className="px-6 py-5 font-bold text-center">Raport SMT 1</th>
-                <th className="px-6 py-5 font-bold text-center">Raport SMT 2</th>
-                <th className="px-6 py-5 font-bold text-center">Nilai Akhir</th>
-                <th className="px-6 py-5 font-bold text-center">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {students.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="p-8 text-center text-slate-500">Belum ada siswa yang terdaftar di database.</td>
-                </tr>
-              ) : (
-                students.map((student) => (
-                  <tr key={student.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="px-6 py-5 font-bold text-slate-800">{student.name}</td>
-                    <td className="px-6 py-5 text-slate-500 font-mono text-sm">@{student.username}</td>
-                    <td className="px-6 py-5 font-semibold text-slate-600">{student.kelas}</td>
-                    <td className="px-6 py-5 text-center">
-                      <span className="px-3 py-1 bg-indigo-50 text-indigo-700 font-bold rounded-full text-sm">
-                        {student.modulesTaken} / 24
-                      </span>
-                    </td>
-                    <td className="px-6 py-5 text-center font-bold text-slate-700">{student.avgS1 > 0 ? student.avgS1 : '-'}</td>
-                    <td className="px-6 py-5 text-center font-bold text-slate-700">{student.avgS2 > 0 ? student.avgS2 : '-'}</td>
-                    <td className="px-6 py-5 text-center font-black text-lg text-blue-700 bg-blue-50/50">{student.average > 0 ? student.average : '-'}</td>
-                    <td className="px-6 py-5 text-center">
-                      {student.isActive ? (
-                        <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">AKTIF</span>
-                      ) : (
-                        <span className="text-xs font-bold text-rose-600 bg-rose-50 px-2 py-1 rounded-md">NONAKTIF</span>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <RaportTable initialStudents={students} teachers={teachers} />
       </div>
     </div>
   );
