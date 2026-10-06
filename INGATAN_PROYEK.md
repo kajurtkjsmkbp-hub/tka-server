@@ -112,9 +112,36 @@ Ketika bank soal dan sistem KKM diperbarui, sistem menangani nilai siswa lama ta
 3. **Data Rekap Guru & Raport:**
    - Rekap nilai di portal Guru dan Raport Siswa tetap utuh dan sinkron, tidak ada data nilai yang hilang (*zero data loss*).
 
+## ⚡ Performa, Kapasitas Concurrency & Panduan Server Proxmox
+
+### 1. Analisis Kapasitas 144+ Siswa Ujian/Belajar Serentak:
+- **Kapasitas Memori (RAM 2 GB): AMAN & SANGAT CUKUP**
+  - Proses Next.js di mode *production* mengonsumsi sekitar **250 MB – 450 MB RAM**.
+  - Saat 144 siswa terhubung serentak, beban RAM hanya naik sedikit untuk buffer koneksi (~100–200 MB).
+  - Total konsumsi RAM hanya sekitar 30%–40% dari 2 GB, sehingga server tidak akan kehabisan memori (*No Out Of Memory*).
+- **Kapasitas CPU (2 Core vs 4 Core):**
+  - **Karakteristik Ringan:** Selama siswa membaca soal dan berpikir memilih opsi A/B/C/D, server berstatus **0% CPU (menganggur)** karena kuis dieksekusi murni di browser klien (*Client-Side State*).
+  - **2 Momen Lonjakan Kritis (Traffic Spike):**
+    1. *Login Massal di Awal Jam Pelajaran:* 144 request verifikasi akun secara bersamaan.
+    2. *Submit Kuis Serentak di Akhir Jam Pelajaran:* Operasi simpan nilai massal ke `scores.json`.
+  - **Rekomendasi Terbaik:** Jika host Proxmox memiliki core menganggur, sangat disarankan menaikkan alokasi ke **4 Core CPU** (dan RAM 2-4 GB) serta menggunakan SSD/NVMe agar proses tulis nilai instan.
+- **Faktor Kritis Jaringan Sekolah (Access Point / WiFi):**
+  - Kelambatan saat 140+ siswa online serentak di lab/kelas hampir selalu disebabkan oleh **bottleneck Access Point (WiFi)** sekolah (1 AP rumahan umumnya hanya kuat 30–40 perangkat). Pastikan distribusi AP memadai atau gunakan kabel LAN di lab PC.
+
+### 2. Diagnosis Perpindahan Menu (Mode Production vs Development):
+- Jika perpindahan menu terasa lambat/loading berputar (2–4 detik), penyebab utamanya adalah server masih berjalan di mode **Development (`npm run dev`)** yang melakukan kompilasi mendadak (*on-demand compilation*) di setiap rute.
+- Di mode **Production (`npm run build` + `pm2 restart all`)**, perpindahan menu bersifat instan (< 100 ms) karena memanfaatkan *Single Page Application (SPA) Client-Side Prefetching*.
+- **Wajib:** Setiap kali selesai melakukan `git pull` di Proxmox, jalankan `npm run build` lalu restart proses PM2.
+
+### 3. Logika Kartu Statistik Dasbor Guru:
+- **Siswa di Kelas Anda:** Total siswa yang terdaftar di rombel kelas yang diampu oleh guru tersebut.
+- **Siswa Aktif Belajar:** Jumlah siswa yang sudah mulai mengerjakan modul dan menuntaskan minimal 1 kuis/lab (`modulesTaken > 0`). Siswa yang belum mulai mengerjakan tidak dihitung di sini.
+- **Rata-rata Kelas Anda:** Nilai rata-rata akumulatif kelas dari siswa yang sudah memiliki nilai di modul yang diajarkan.
+
 ## 🛠️ Catatan Khusus
 - Server Proxmox LXC harus disetel **"Start at boot: Yes"** pada menu Options agar web otomatis menyala setelah listrik mati.
 - File `db.ts` dan migrasi Prisma telah dihapus karena proyek berkomitmen menggunakan JSON Atomic Write demi kelancaran dan kemudahan portabilitas.
+- Strict Type Checking pada `npm run build` harus selalu dipertahankan (hindari parameter bertipe implicit `any`).
 
 ## 🛡️ Keamanan Database (Git Ignore)
 - File JSON di dalam folder `data/` (seperti `db.json`, `scores.json`, `announcement.json`) **telah dikeluarkan dari pelacakan Git (untracked) dan dimasukkan ke `.gitignore`**. 
