@@ -96,6 +96,14 @@ Dokumen ini berfungsi sebagai memori permanen proyek untuk AI dan Pengembang. Be
     - Di formulir pendaftaran siswa maupun formulir masuk/login, disematkan informasi bantuan praktis:
       > *"Jika siswa lupa dengan login dan kata sandi, silakan hubungi: **Adiningtyas Yuli Purwanto, S.Kom**"*
     - Memudahkan siswa saat mengalami kendala lupa password atau lupa ID login sehingga dapat langsung menghubungi Super Admin.
+21. **Independensi Progres Modul (Kuis Murni) & Pengerjaan Ulang Virtual Lab (Best Score):**
+    - Syarat pembukaan modul/pertemuan berikutnya dialihkan **100% murni berdasarkan Kuis (Latihan Soal) ≥ KKM 75**. Virtual Lab tidak lagi menjadi pemblokir gerbang pertemuan berikutnya.
+    - Siswa yang nilai kuisnya ≥ 75 otomatis dapat melanjutkan ke pertemuan berikutnya walaupun belum menuntaskan seluruh tantangan lab.
+    - Pada halaman Virtual Lab (`/dashboard/siswa/lab/[id]`), menghilangkan status *Akses Terkunci* permanen:
+      - Siswa yang memperoleh **skor sempurna (maksimal)** akan menerima kartu ucapan selamat dan piala 🏆 tanpa tombol pengulangan.
+      - Siswa yang skor lab-nya belum maksimal (misal karena penalti bocoran kunci) diberikan tombol interaktif **"🔄 Kerjakan Ulang Lab"** untuk memperbaiki nilai.
+      - API backend (`/api/scores`) menerapkan prinsip *Best Score* untuk lab: nilai tertinggi siswa selalu dipertahankan dan tidak akan pernah turun.
+
 
 ## 🔄 Mekanisme Transisi Nilai Eksisting (Pembaruan Bank Soal & KKM 75)
 Ketika bank soal dan sistem KKM diperbarui, sistem menangani nilai siswa lama tanpa merusak data:
