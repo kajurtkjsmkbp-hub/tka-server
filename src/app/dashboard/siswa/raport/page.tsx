@@ -98,7 +98,7 @@ export default function SiswaRaport() {
       isLatihanTuntas,
       needRemidi,
       isLabDone,
-      isTuntas: isLatihanTuntas && isLabDone
+      isTuntas: isLatihanTuntas // Ketuntasan modul hanya ditentukan oleh Kuis >= KKM
     };
   };
 

@@ -93,20 +93,13 @@ export default function SiswaDashboard() {
 
   const KKM = 75; // Kriteria Ketuntasan Minimal
 
-  // Strict check logic: Latihan harus >= KKM DAN Lab selesai
+  // Logika ketuntasan modul: Hanya Kuis/Latihan >= KKM yang menentukan progres.
+  // Virtual Lab tetap tersedia namun tidak memblokir akses ke pertemuan berikutnya.
   const isModuleStrictlyTuntas = (modulId: string) => {
     const latihanScore = userScores.find(s => s.materiId === modulId);
     const isLatihanTuntas = latihanScore ? latihanScore.score >= KKM : false;
     
-    const labChallenges = userScores.filter(s => s.materiId.startsWith(modulId + "-lab-chal"));
-    const doneChalIds = new Set(labChallenges.map(c => c.materiId));
-    
-    const labDef = (labData as any)[modulId];
-    const totalChallenges = labDef && labDef.challenges ? labDef.challenges.length : 0;
-    
-    const isLabDone = totalChallenges === 0 ? true : (doneChalIds.size >= totalChallenges);
-    
-    return isLatihanTuntas && isLabDone;
+    return isLatihanTuntas;
   };
 
   // Cek apakah siswa sudah mengerjakan tapi belum tuntas KKM (perlu remidi)
