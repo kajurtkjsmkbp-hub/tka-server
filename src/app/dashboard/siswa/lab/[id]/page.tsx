@@ -170,16 +170,27 @@ export default function VirtualLab({ params }: { params: Promise<{ id: string }>
     return (
       <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 flex items-center justify-center">
         <div className="max-w-2xl w-full bg-white rounded-3xl shadow-xl p-10 text-center border border-slate-200">
-          <div className="text-6xl mb-6">🔒</div>
-          <h2 className="text-3xl font-black text-slate-800 mb-4">Akses Terkunci</h2>
-          <p className="text-lg text-slate-600 mb-8">
+          <div className="text-6xl mb-6">✅</div>
+          <h2 className="text-3xl font-black text-slate-800 mb-4">Lab Sudah Pernah Dikerjakan</h2>
+          <p className="text-lg text-slate-600 mb-4">
             Kamu sudah pernah menyelesaikan Virtual Lab untuk <strong>{data.title}</strong> sebelumnya. 
             <br/><br/>
             Skor total yang telah kamu kumpulkan di lab ini adalah: <strong className="text-indigo-600">{totalEarned} EXP</strong>.
           </p>
-          <Link href="/dashboard/siswa" className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-xl transition-all shadow-lg shadow-indigo-600/30 hover:-translate-y-1">
-            Kembali ke Dasbor Siswa
-          </Link>
+          <p className="text-sm text-slate-500 mb-8">
+            Kamu dapat mengerjakan ulang lab ini untuk memperbaiki skor. Sistem akan menyimpan <strong>skor tertinggi</strong>.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={() => { setAlreadyCompleted(false); setCurrentChalIndex(0); }}
+              className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 px-10 rounded-xl transition-all shadow-lg shadow-amber-500/30 hover:-translate-y-1"
+            >
+              🔄 Kerjakan Ulang Lab
+            </button>
+            <Link href="/dashboard/siswa" className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-xl transition-all shadow-lg shadow-indigo-600/30 hover:-translate-y-1">
+              Kembali ke Dasbor Siswa
+            </Link>
+          </div>
         </div>
       </div>
     );

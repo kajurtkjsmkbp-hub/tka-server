@@ -58,6 +58,16 @@ export async function POST(request: Request) {
           isRemidi: true,
           timestamp: new Date().toISOString()
         };
+      } else if (materiId.includes('-lab-chal')) {
+        // Lab challenge dikerjakan ulang — simpan skor tertinggi (best score)
+        const bestScore = Math.max(existing.score, score);
+        scores[existingIndex] = {
+          ...existing,
+          score: bestScore,
+          lastScore: score,
+          attemptCount: (existing.attemptCount || 1) + 1,
+          timestamp: new Date().toISOString()
+        };
       } else {
         // Submit pertama kali tapi ternyata sudah ada (edge case)
         return NextResponse.json({ error: 'Kamu sudah pernah mengerjakan latihan ini.' }, { status: 400 });
